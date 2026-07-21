@@ -24,6 +24,14 @@
   --red-border: rgb(233, 190, 186);
   --dark-section: rgb(28, 33, 43);
   --header-bg: rgb(255 255 255 / 0.92);
+
+  /* Материалы на тёмном фоне внутри светлой темы (§3.1) */
+  --grafit-surface: rgb(37, 43, 56);
+  --grafit-line: rgb(56, 63, 76);
+  --text-inverse: rgb(178, 187, 200);
+  --text-inverse-muted: rgb(122, 132, 150);
+  --kobalt-light: rgb(126, 158, 240);
+
   color-scheme: light;
 }
 
@@ -51,23 +59,44 @@
 }
 
 :root {
-  /* Скругления */
-  --radius-sm: 2px;
-  --radius-md: 6px;
-  --radius-lg: 8px;
+  /* Скругления (§4.2): 6 заметки · 8 мини · 10 поля · 12 кнопки · 16 карточки · 999 бейджи */
+  --radius-sm: 6px;
+  --radius-md: 8px;
+  --radius-lg: 10px;
   --radius-xl: 12px;
   --radius-2xl: 16px;
   --radius-full: 999px;
 
-  /* Шкала отступов */
+  /* Шкала отступов (§4.2): 4·8·12·16·20·24·32·40·48·64·88·104 */
   --space-1: 4px;
   --space-2: 8px;
   --space-3: 12px;
   --space-4: 16px;
-  --space-5: 24px;
-  --space-6: 28px;
-  --space-7: 40px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-7: 32px;
+  --space-8: 40px;
+  --space-9: 48px;
+  --space-10: 64px;
+  --space-11: 88px;
+  --space-12: 104px;
 
-  /* Контейнер */
+  /* Контейнеры и размеры (§4.2) */
+  --container-content: 1240px;
   --container-max: 1352px;
+  --container-article: 720px;
+  --page-margin: 56px;
+  --page-margin-mobile: 20px;
+  --grid-gutter: 24px;
+  --header-height: 72px;
+  --control-height: 54px;
+  --control-height-compact: 42px;
+  --hit-target-min: 44px;
+  --border-width: 2px;
+
+  /* Длительности анимаций (§4.2) — отключаются при prefers-reduced-motion */
+  --motion-button: 200ms;
+  --motion-card: 180ms;
+  --motion-accordion: 300ms;
+  --motion-reveal: 650ms;
 }
