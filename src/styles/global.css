@@ -51,6 +51,7 @@
   --color-text-inverse: var(--text-inverse);
   --color-text-inverse-muted: var(--text-inverse-muted);
   --color-kobalt-light: var(--kobalt-light);
+  --color-belyi: var(--belyi);
 
   /* Семантика shadcn → те же токены (дефолтной oklch-темы в репо нет) */
   --color-background: var(--bg);
@@ -277,5 +278,69 @@
       font-size: 28px;
       line-height: 33px;
     }
+  }
+
+  /* Внутренний контейнер секции: ширина контента + поля страницы (§4.2).
+     max-width 1352px = контент 1240px + поля по 56px; на мобиле поля 20px. */
+  .section-shell {
+    width: 100%;
+    max-width: var(--container-max);
+    margin-inline: auto;
+    padding-inline: var(--page-margin-mobile);
+  }
+  @media (min-width: 768px) {
+    .section-shell {
+      padding-inline: var(--page-margin);
+    }
+  }
+
+  /* Reveal-анимация при скролле (§4.2, motion-reveal 650ms).
+     Инлайн-скрипт добавляет .reveal-on на <html> ДО отрисовки секций, только
+     если движение разрешено и есть IntersectionObserver, — поэтому без JS или
+     при prefers-reduced-motion контент всегда виден (нет скрытого состояния). */
+  .reveal-on [data-reveal] {
+    opacity: 0;
+    transform: translateY(16px);
+    transition:
+      opacity var(--motion-reveal) ease,
+      transform var(--motion-reveal) ease;
+  }
+  .reveal-on [data-reveal].is-visible {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* Появление элементов hero-композиции «хаос → мост → порядок».
+   Задержки заданы инлайн у каждого элемента; проигрываются один раз при
+   загрузке. При prefers-reduced-motion — сразу финальное состояние. */
+@keyframes mostDraw {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+@keyframes mostPop {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@keyframes mostIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  [data-anim] {
+    animation: none !important;
+    opacity: 1 !important;
+    stroke-dashoffset: 0 !important;
   }
 }

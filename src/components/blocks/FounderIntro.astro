@@ -1,0 +1,64 @@
+---
+/**
+ * «Кто за этим стоит»: placeholder-фото (диагональная штриховка, нейтральна в
+ * обеих темах) + короткий текст о команде из макета. Реальное фото — позже.
+ */
+const bullets = [
+  "Начинаем с диагностики, а не с кода",
+  "Пишем документы, по которым может работать любая команда, — не привязываем вас к себе",
+  "Говорим на вашем языке: с бизнесом — без терминов, с командами — про SRS и критерии приёмки",
+];
+---
+
+<section class="border-t-2 border-line bg-surface">
+  <div
+    class="section-shell grid items-center gap-[var(--space-8)] py-[var(--space-10)] md:gap-[var(--space-10)] md:py-[var(--space-12)]"
+    style="grid-template-columns:repeat(auto-fit,minmax(min(420px,100%),1fr))"
+  >
+    <!-- Placeholder-фото -->
+    <div
+      data-reveal
+      class="relative flex min-h-[360px] items-center justify-center overflow-hidden rounded-2xl border-2 border-line"
+      style="background:repeating-linear-gradient(-45deg,var(--bg),var(--bg) 12px,var(--hover) 12px,var(--hover) 24px)"
+    >
+      <span
+        class="text-mono-caption rounded-md border-2 border-dashed border-line2 bg-surface px-[var(--space-4)] py-[10px] text-muted"
+        >фото: рабочая сессия команды</span
+      >
+    </div>
+
+    <div
+      data-reveal
+      data-reveal-delay="120"
+      class="flex flex-col gap-[var(--space-5)]"
+    >
+      <span class="text-overline text-muted">Кто за этим стоит</span>
+      <h2 class="text-h2 text-ink">
+        Системные аналитики с опытом в коммерческой разработке
+      </h2>
+      <p class="text-body-article text-muted">
+        Наводим порядок и в процессах компании, и внутри системы: от приёма
+        заявок в салоне до SRS для продуктовой команды.
+      </p>
+      <ul class="flex flex-col gap-[14px]">
+        {
+          bullets.map((b) => (
+            <li class="flex items-start gap-[14px]">
+              <span
+                aria-hidden="true"
+                class="mt-[7px] h-[10px] w-[10px] shrink-0 rounded-[2px] bg-accent"
+              />
+              <span class="text-body text-ink">{b}</span>
+            </li>
+          ))
+        }
+      </ul>
+      <a
+        href="/about"
+        class="text-button inline-flex items-center gap-[var(--space-2)] text-accent no-underline hover:text-accent-hover"
+      >
+        Подробнее о нас <span aria-hidden="true">→</span>
+      </a>
+    </div>
+  </div>
+</section>

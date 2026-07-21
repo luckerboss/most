@@ -1,0 +1,83 @@
+---
+/**
+ * Лестница услуг «Как строится мост»: четыре ступени процесса. Тексты — из
+ * макета. Каждая ступень самоценна (примечание внизу).
+ */
+const steps = [
+  {
+    n: "01",
+    term: "1–2 недели",
+    title: "Диагностика",
+    text: "Находим, где теряются деньги и время. Результат — карта проблем и приоритеты.",
+    delay: 0,
+  },
+  {
+    n: "02",
+    term: "2–4 недели",
+    title: "Проектирование",
+    text: "Требования, прототипы и критерии приёмки — по ним может работать любая команда.",
+    delay: 80,
+  },
+  {
+    n: "03",
+    term: "от 1,5 месяцев",
+    title: "Разработка",
+    text: "Строим систему по спроектированному — без сюрпризов в смете и сроках.",
+    delay: 160,
+  },
+  {
+    n: "04",
+    term: "по подписке",
+    title: "Поддержка",
+    text: "Развиваем систему, ведём бэклог и остаёмся на связи.",
+    delay: 240,
+  },
+];
+---
+
+<section class="bg-bg">
+  <div class="section-shell py-[var(--space-10)] md:py-[var(--space-12)]">
+    <div
+      data-reveal
+      class="flex flex-wrap items-end justify-between gap-[var(--space-4)]"
+    >
+      <div class="flex max-w-[640px] flex-col gap-[var(--space-3)]">
+        <span class="text-overline text-muted">Лестница услуг</span>
+        <h2 class="text-h2 text-ink">Как строится мост</h2>
+      </div>
+      <a
+        href="/services"
+        class="text-button inline-flex items-center gap-[var(--space-2)] text-accent no-underline hover:text-accent-hover"
+      >
+        Подробнее об услугах <span aria-hidden="true">→</span>
+      </a>
+    </div>
+
+    <div
+      class="mt-[var(--space-8)] grid gap-[var(--space-5)]"
+      style="grid-template-columns:repeat(auto-fit,minmax(min(250px,100%),1fr))"
+    >
+      {
+        steps.map((s) => (
+          <div
+            data-reveal
+            data-reveal-delay={s.delay}
+            class="flex flex-col gap-[var(--space-3)] rounded-2xl border-2 border-line bg-surface p-[var(--space-6)]"
+          >
+            <div class="flex items-baseline justify-between gap-[var(--space-2)]">
+              <span class="text-mono-caption text-accent">{s.n}</span>
+              <span class="text-mono-caption text-muted">{s.term}</span>
+            </div>
+            <span class="text-h4 text-ink">{s.title}</span>
+            <span class="text-body-s text-muted">{s.text}</span>
+          </div>
+        ))
+      }
+    </div>
+
+    <p data-reveal class="text-body-s mt-[var(--space-6)] text-muted">
+      <span class="font-semibold text-green">Каждая ступень самоценна:</span> можно
+      остановиться после любой — результат останется у вас и будет работать без нас.
+    </p>
+  </div>
+</section>

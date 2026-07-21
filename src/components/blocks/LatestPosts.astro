@@ -1,0 +1,72 @@
+---
+/**
+ * Блок последних статей. Принимает массив `posts` — на фазе 5 сюда придут
+ * реальные записи из content collections без переделки разметки.
+ *
+ * @typedef {Object} Post
+ * @property {string} title
+ * @property {string} excerpt
+ * @property {string} href
+ * @property {string} date      — уже отформатированная дата
+ * @property {number} minutes   — время чтения
+ * @property {"it"|"business"} segment — сегмент (задаёт цвет бейджа)
+ *
+ * @type {{ posts?: Post[] }}
+ */
+const { posts = [] } = Astro.props;
+
+/** Оформление бейджа сегмента: цвет текста + подложка (§3 токены). */
+const SEGMENTS = {
+  it: { label: "Продукт и команда", badge: "text-accent bg-accent-tint" },
+  business: { label: "Малый бизнес", badge: "text-green bg-green-tint" },
+};
+---
+
+<section class="border-t-2 border-line bg-bg">
+  <div class="section-shell py-[var(--space-10)] md:py-[var(--space-12)]">
+    <div
+      data-reveal
+      class="flex flex-wrap items-end justify-between gap-[var(--space-4)]"
+    >
+      <div class="flex flex-col gap-[var(--space-3)]">
+        <span class="text-overline text-muted">Блог</span>
+        <h2 class="text-h2 text-ink">Разбираем на примерах</h2>
+      </div>
+      <a
+        href="/blog"
+        class="text-button inline-flex items-center gap-[var(--space-2)] text-accent no-underline hover:text-accent-hover"
+      >
+        Все статьи <span aria-hidden="true">→</span>
+      </a>
+    </div>
+
+    <div
+      class="mt-[var(--space-8)] grid gap-[var(--space-6)]"
+      style="grid-template-columns:repeat(auto-fit,minmax(min(320px,100%),1fr))"
+    >
+      {
+        posts.map((post) => {
+          const seg = SEGMENTS[post.segment] ?? SEGMENTS.it;
+          return (
+            <a
+              href={post.href}
+              data-reveal
+              class="flex flex-col gap-[14px] rounded-2xl border-2 border-line bg-surface p-[var(--space-6)] text-ink no-underline transition duration-[var(--motion-button)] hover:-translate-y-[3px] hover:border-line2 hover:shadow-[0_12px_28px_var(--shadow-card)]"
+            >
+              <span
+                class={`text-caption self-start rounded-full px-[10px] py-[5px] font-medium tracking-[0.4px] ${seg.badge}`}
+              >
+                {seg.label}
+              </span>
+              <span class="text-h4 text-ink">{post.title}</span>
+              <span class="text-body-s text-muted">{post.excerpt}</span>
+              <span class="text-mono-caption mt-auto text-muted">
+                {post.date} · {post.minutes} мин
+              </span>
+            </a>
+          );
+        })
+      }
+    </div>
+  </div>
+</section>

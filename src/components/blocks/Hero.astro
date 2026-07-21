@@ -1,0 +1,172 @@
+---
+/**
+ * Hero главной: метафора «Мост» — линия, соединяющая хаос в процессах и
+ * работающую систему. Заголовок/подзаголовок и CTA — из макета (не менять).
+ * Справа — декоративная композиция «хаос → мост → порядок» (aria-hidden),
+ * появляется покадрово при загрузке (data-anim, keyframes в global.css).
+ */
+---
+
+<section class="relative overflow-hidden bg-bg">
+  <!-- Миллиметровая сетка фоном, скрыта радиальной маской -->
+  <div
+    aria-hidden="true"
+    class="pointer-events-none absolute inset-0"
+    style="background-image:linear-gradient(var(--line) 1px,transparent 1px),linear-gradient(90deg,var(--line) 1px,transparent 1px);background-size:28px 28px;opacity:0.45;-webkit-mask-image:radial-gradient(ellipse 85% 90% at 72% 40%,black,transparent 72%);mask-image:radial-gradient(ellipse 85% 90% at 72% 40%,black,transparent 72%)"
+  >
+  </div>
+
+  <div
+    class="section-shell relative grid items-center gap-[var(--space-8)] py-[var(--space-10)] md:gap-[var(--space-10)] md:py-[var(--space-12)]"
+    style="grid-template-columns:repeat(auto-fit,minmax(min(440px,100%),1fr))"
+  >
+    <!-- Текстовая колонка -->
+    <div
+      data-reveal
+      class="flex max-w-[600px] flex-col items-start gap-[var(--space-6)]"
+    >
+      <span class="text-overline text-muted"
+        >Системный анализ · Требования · Разработка</span
+      >
+      <h1 class="text-display text-ink">
+        Между хаосом в процессах и работающей системой — мост
+      </h1>
+      <p class="text-lead max-w-[520px] text-muted">
+        Разбираем, как на самом деле устроен ваш бизнес или продукт, наводим
+        порядок в требованиях — и только потом строим систему, где всё под
+        контролем.
+      </p>
+      <div class="mt-[var(--space-2)] flex flex-wrap gap-[14px]">
+        <a
+          href="#fork"
+          class="text-button inline-flex h-[var(--control-height)] items-center gap-[10px] rounded-xl border-2 border-transparent bg-accent px-6 text-belyi no-underline transition-colors duration-[var(--motion-button)] hover:border-ink hover:bg-transparent hover:text-ink"
+        >
+          Выбрать, с чего начать<span aria-hidden="true" class="text-[18px]"
+            >↓</span
+          >
+        </a>
+        <a
+          href="/services"
+          class="text-button inline-flex h-[var(--control-height)] items-center rounded-xl border-2 border-line bg-surface px-6 text-ink no-underline transition-colors duration-[var(--motion-card)] hover:border-accent hover:text-accent"
+        >
+          Услуги и цены
+        </a>
+      </div>
+    </div>
+
+    <!-- Композиция «хаос → мост → порядок» -->
+    <div
+      data-reveal
+      data-reveal-delay="150"
+      aria-hidden="true"
+      class="flex min-w-0 flex-col gap-[18px]"
+    >
+      <div class="flex flex-wrap items-center gap-[10px]">
+        <!-- Хаос: разрозненные заметки -->
+        <div class="flex w-[178px] shrink-0 flex-col">
+          <div
+            data-anim
+            class="text-mono-caption rounded-sm border-2 border-dashed border-line2 bg-surface px-[12px] py-[9px] text-muted"
+            style="transform:rotate(-6deg);box-shadow:0 2px 10px var(--shadow-card);opacity:0;animation:mostPop .45s ease 0s forwards"
+          >
+            заявка в мессенджере — без ответа 2 дня
+          </div>
+          <div
+            data-anim
+            class="text-mono-caption rounded-sm border-2 border-line bg-surface px-[12px] py-[9px] text-muted"
+            style="transform:rotate(4deg);margin:-4px 0 0 22px;box-shadow:0 2px 10px var(--shadow-card);opacity:0;animation:mostPop .45s ease .12s forwards"
+          >
+            тетрадь записей, стр. 47
+          </div>
+          <div
+            data-anim
+            class="text-mono-caption rounded-sm border-2 border-dashed border-line2 bg-surface px-[12px] py-[9px] text-red"
+            style="transform:rotate(-3deg);margin:-2px 0 0 4px;box-shadow:0 2px 10px var(--shadow-card);opacity:0;animation:mostPop .45s ease .24s forwards"
+          >
+            «перезвонить!!»
+          </div>
+          <div
+            data-anim
+            class="text-mono-caption rounded-sm border-2 border-line bg-surface px-[12px] py-[9px] text-muted"
+            style="transform:rotate(6deg);margin:-3px 0 0 30px;box-shadow:0 2px 10px var(--shadow-card);opacity:0;animation:mostPop .45s ease .36s forwards"
+          >
+            смета_финал_v7.xlsx
+          </div>
+        </div>
+
+        <!-- Мост -->
+        <svg
+          viewBox="0 0 220 120"
+          fill="none"
+          class="h-auto max-w-[280px] min-w-[150px] flex-1 text-ink"
+        >
+          <line x1="60" y1="84" x2="60" y2="110" stroke="currentColor" stroke-width="2.5" data-anim style="opacity:0;animation:mostPop .4s ease .5s forwards"></line>
+          <line x1="160" y1="84" x2="160" y2="110" stroke="currentColor" stroke-width="2.5" data-anim style="opacity:0;animation:mostPop .4s ease .62s forwards"></line>
+          <line x1="40" y1="64" x2="40" y2="84" stroke="var(--line2)" stroke-width="1.2" data-anim style="opacity:0;animation:mostPop .35s ease 1.4s forwards"></line>
+          <line x1="77" y1="51" x2="77" y2="84" stroke="var(--line2)" stroke-width="1.2" data-anim style="opacity:0;animation:mostPop .35s ease 1.5s forwards"></line>
+          <line x1="110" y1="47" x2="110" y2="84" stroke="var(--line2)" stroke-width="1.2" data-anim style="opacity:0;animation:mostPop .35s ease 1.6s forwards"></line>
+          <line x1="143" y1="51" x2="143" y2="84" stroke="var(--line2)" stroke-width="1.2" data-anim style="opacity:0;animation:mostPop .35s ease 1.7s forwards"></line>
+          <line x1="180" y1="64" x2="180" y2="84" stroke="var(--line2)" stroke-width="1.2" data-anim style="opacity:0;animation:mostPop .35s ease 1.8s forwards"></line>
+          <path d="M6 84 Q110 10 214 84" stroke="var(--accent)" stroke-width="2.5" data-anim style="stroke-dasharray:240;stroke-dashoffset:240;animation:mostDraw .9s ease 1s forwards"></path>
+          <line x1="6" y1="84" x2="214" y2="84" stroke="currentColor" stroke-width="2.5" data-anim style="stroke-dasharray:208;stroke-dashoffset:208;animation:mostDraw .7s ease .65s forwards"></line>
+          <circle cx="6" cy="84" r="3.2" fill="var(--accent)" data-anim style="opacity:0;animation:mostPop .3s ease 1.9s forwards"></circle>
+          <circle cx="110" cy="47" r="3.2" fill="var(--accent)" data-anim style="opacity:0;animation:mostPop .3s ease 2s forwards"></circle>
+          <circle cx="214" cy="84" r="3.2" fill="var(--accent)" data-anim style="opacity:0;animation:mostPop .3s ease 2.1s forwards"></circle>
+        </svg>
+
+        <!-- Порядок: панель «под контролем» -->
+        <div class="grid w-[216px] shrink-0 grid-cols-2 gap-[var(--space-2)]">
+          <div
+            data-anim
+            class="flex flex-col gap-[7px] rounded-md border-2 border-line bg-surface px-[12px] py-[10px]"
+            style="opacity:0;animation:mostIn .5s ease 1.9s forwards"
+          >
+            <span class="font-mono text-[11px] leading-[14px] font-medium text-muted">заявки</span>
+            <span class="block h-[4px] rounded-[2px]" style="background:linear-gradient(90deg,var(--accent) 78%,var(--line) 78%)"></span>
+          </div>
+          <div
+            data-anim
+            class="flex flex-col gap-[7px] rounded-md border-2 border-line bg-surface px-[12px] py-[10px]"
+            style="opacity:0;animation:mostIn .5s ease 2s forwards"
+          >
+            <span class="font-mono text-[11px] leading-[14px] font-medium text-muted">записи</span>
+            <span class="block h-[4px] rounded-[2px]" style="background:linear-gradient(90deg,var(--accent) 62%,var(--line) 62%)"></span>
+          </div>
+          <div
+            data-anim
+            class="flex flex-col gap-[7px] rounded-md border-2 border-line bg-surface px-[12px] py-[10px]"
+            style="opacity:0;animation:mostIn .5s ease 2.1s forwards"
+          >
+            <span class="font-mono text-[11px] leading-[14px] font-medium text-muted">клиенты</span>
+            <span class="block h-[4px] rounded-[2px]" style="background:linear-gradient(90deg,var(--accent) 84%,var(--line) 84%)"></span>
+          </div>
+          <div
+            data-anim
+            class="flex flex-col gap-[7px] rounded-md border-2 border-line bg-surface px-[12px] py-[10px]"
+            style="opacity:0;animation:mostIn .5s ease 2.2s forwards"
+          >
+            <span class="font-mono text-[11px] leading-[14px] font-medium text-muted">оплаты</span>
+            <span class="block h-[4px] rounded-[2px]" style="background:linear-gradient(90deg,var(--accent) 55%,var(--line) 55%)"></span>
+          </div>
+          <div
+            data-anim
+            class="col-span-2 flex items-center justify-between gap-[var(--space-2)] rounded-md border-2 border-accent bg-surface px-[12px] py-[10px]"
+            style="opacity:0;animation:mostIn .5s ease 2.35s forwards"
+          >
+            <span class="font-mono text-[11px] leading-[14px] font-medium text-ink">под контролем</span>
+            <span class="h-[8px] w-[8px] rounded-full bg-green"></span>
+          </div>
+        </div>
+      </div>
+
+      <div class="flex justify-center">
+        <span
+          data-anim
+          class="text-mono-caption border-t-2 border-dashed border-line2 pt-[10px] text-muted"
+          style="opacity:0;animation:mostPop .5s ease 2.5s forwards"
+          >диагностика → проектирование → разработка → поддержка</span
+        >
+      </div>
+    </div>
+  </div>
+</section>

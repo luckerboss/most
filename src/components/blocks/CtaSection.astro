@@ -1,0 +1,49 @@
+---
+/**
+ * Финальная CTA-секция на тёмной подложке (--dark-section). Переиспользуется на
+ * других лендингах — тексты и кнопки параметризованы, дефолты берутся из макета
+ * главной. Формы подключаются на фазе 4, пока — ссылки на страницы сегментов.
+ *
+ * @type {{
+ *   title?: string,
+ *   text?: string,
+ *   note?: string,
+ *   primary?: { label: string, href: string },
+ *   secondary?: { label: string, href: string },
+ * }}
+ */
+const {
+  title = "Не уверены, что вам нужна разработка?",
+  text = "Начните с диагностики. Даже если дальше ничего не закажете — у вас останется карта проблем и понятный план, что с ними делать.",
+  note = "диагностика: 1–2 недели · 40–80 тыс ₽",
+  primary = { label: "Записаться на диагностику", href: "/business#form" },
+  secondary = { label: "Получить ревью ТЗ", href: "/it#form" },
+} = Astro.props;
+---
+
+<section class="bg-dark-section">
+  <div
+    class="section-shell flex flex-col items-start gap-[var(--space-6)] py-[var(--space-10)] md:py-[var(--space-12)]"
+  >
+    <h2 data-reveal class="text-h2 max-w-[720px] text-belyi">{title}</h2>
+    <p data-reveal class="text-lead max-w-[640px] text-text-inverse">{text}</p>
+    <div
+      data-reveal
+      class="flex flex-wrap items-center gap-[14px]"
+    >
+      <a
+        href={primary.href}
+        class="text-button inline-flex h-[var(--control-height)] items-center rounded-xl border-2 border-transparent bg-accent px-6 text-belyi no-underline transition-colors duration-[var(--motion-button)] hover:border-belyi hover:bg-transparent"
+      >
+        {primary.label}
+      </a>
+      <a
+        href={secondary.href}
+        class="text-button inline-flex h-[var(--control-height)] items-center rounded-xl border-2 border-muted bg-transparent px-6 text-belyi no-underline transition-colors duration-[var(--motion-card)] hover:border-belyi"
+      >
+        {secondary.label}
+      </a>
+      <span class="text-mono-caption text-text-inverse-muted">{note}</span>
+    </div>
+  </div>
+</section>

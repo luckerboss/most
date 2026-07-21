@@ -1,0 +1,58 @@
+---
+/**
+ * Развилка на два сегмента: «У меня свой бизнес» → /business (акцент malahit)
+ * и «У меня продукт или команда» → /it (акцент kobalt). Переиспользуется на
+ * других лендингах. Тексты — из макета, не менять.
+ */
+---
+
+<section id="fork" class="border-y-2 border-line bg-surface">
+  <div class="section-shell py-[var(--space-10)] md:py-[var(--space-12)]">
+    <div data-reveal class="flex max-w-[640px] flex-col gap-[var(--space-3)]">
+      <span class="text-overline text-muted">Два языка — одна система</span>
+      <h2 class="text-h2 text-ink">С чем вы пришли?</h2>
+    </div>
+
+    <div
+      class="mt-[var(--space-8)] grid gap-[var(--space-6)]"
+      style="grid-template-columns:repeat(auto-fit,minmax(min(380px,100%),1fr))"
+    >
+      <a
+        href="/business"
+        data-reveal
+        class="flex flex-col gap-[var(--space-4)] rounded-2xl border-2 border-line bg-bg p-[var(--space-6)] text-ink no-underline transition duration-[var(--motion-button)] hover:-translate-y-[3px] hover:border-green hover:shadow-[0_12px_28px_var(--shadow-card)] md:p-[var(--space-8)]"
+      >
+        <span class="text-overline text-green">01 · малый бизнес</span>
+        <span class="text-h3 text-ink">У меня свой бизнес</span>
+        <span class="text-body text-muted">
+          Салон, студия, магазин или фитнес. Записи в тетрадке, заявки теряются,
+          всё держится на вас — а хочется, чтобы работало само.
+        </span>
+        <span
+          class="text-button mt-auto inline-flex items-center gap-[var(--space-2)] text-green"
+        >
+          Навести порядок <span aria-hidden="true">→</span>
+        </span>
+      </a>
+
+      <a
+        href="/it"
+        data-reveal
+        data-reveal-delay="120"
+        class="flex flex-col gap-[var(--space-4)] rounded-2xl border-2 border-line bg-bg p-[var(--space-6)] text-ink no-underline transition duration-[var(--motion-button)] hover:-translate-y-[3px] hover:border-accent hover:shadow-[0_12px_28px_var(--shadow-card)] md:p-[var(--space-8)]"
+      >
+        <span class="text-overline text-accent">02 · стартапы и команды</span>
+        <span class="text-h3 text-ink">У меня продукт или команда</span>
+        <span class="text-body text-muted">
+          Фичи переделываются, бэклог в одну строку, инвестору нечего показать.
+          Нужны требования, по которым можно строить.
+        </span>
+        <span
+          class="text-button mt-auto inline-flex items-center gap-[var(--space-2)] text-accent"
+        >
+          Выстроить требования <span aria-hidden="true">→</span>
+        </span>
+      </a>
+    </div>
+  </div>
+</section>
