@@ -1,0 +1,17 @@
+---
+import ThemeToggle from "@/components/blocks/ThemeToggle.jsx";
+---
+
+<header
+  class="sticky top-0 z-50 border-b border-line bg-header-bg backdrop-blur-[8px]"
+>
+  <div class="site-container flex h-[64px] items-center justify-between">
+    <a href="/" class="font-heading text-xl font-bold text-ink">Мост</a>
+
+    <div class="flex items-center gap-3">
+      <!-- Навигация заполняется в фазе 3 -->
+      <nav aria-label="Основная навигация"></nav>
+      <ThemeToggle client:load />
+    </div>
+  </div>
+</header>

@@ -1,22 +1,77 @@
-## Development
-
-When starting the dev server, use background mode:
-
+# «Мост» / сайт — конвенции для ИИ-агента
+ 
+Этот файл включается в контекст КАЖДОГО промпта для Claude Code по проекту сайта (положить в корень репозитория как `CLAUDE.md` или подключать явно). Правила ниже — не пожелания, а инварианты проекта. Агент не имеет права их менять, «улучшать» или обходить без явного указания в промпте.
+ 
+---
+ 
+## 1. Язык и стек
+ 
+- Язык проекта — **JavaScript**. Файлы: `.astro`, `.jsx`, `.js`, `.mjs`. Создавать `.ts` / `.tsx` файлы **запрещено**.
+- `tsconfig.json` существует только ради алиасов путей (`@/*` → `src/*`) и подсказок редактора: `"extends": "astro/tsconfigs/base"`. Строгие режимы не включать.
+- JSDoc-аннотации для нетривиальных функций — приветствуются (это наш инструмент ревью), но без фанатизма.
+- Стек зафиксирован: Astro 5, React-острова, Tailwind CSS 4, shadcn/ui, MDX content collections. Новые зависимости — только по явному указанию в промпте; «удобную библиотеку» самовольно не добавлять.
+## 2. UI-компоненты: shadcn/ui
+ 
+- `components.json`: `"tsx": false` — компоненты генерируются в JSX. Проверять после каждого `npx shadcn add`, что в репо не появились `.tsx`.
+- Компоненты shadcn живут в `src/components/ui/` и считаются нашим кодом: кастомизировать можно, но только через токены (см. §3–4), не хардкодом значений внутри компонента.
+- Другие UI-библиотеки (MUI, Ant, Chakra, DaisyUI и т.п.) не использовать. Нет компонента в shadcn — собираем свой на Radix-примитивах + Tailwind.
+- Иконки — lucide-react (идёт в паре с shadcn), другие иконочные паки не подключать.
+## 3. Цвета: только RGB
+ 
+- Единственный допустимый формат цвета в проекте — **`rgb(R, G, B)`** (при прозрачности — `rgb(R G B / A)`).
+- **Запрещены**: hex (`#1A2B3C`), `hsl()`, `oklch()`, именованные CSS-цвета (`white`, `slateblue`), произвольные значения Tailwind с hex (`bg-[#...]`).
+- Все цвета определяются один раз как CSS-переменные в `src/styles/tokens.css` и используются только через них / через Tailwind-классы, на них замапленные. Новые цвета «по месту» не вводить — если цвета нет в палитре, это вопрос к человеку, а не повод придумать свой.
+- Внимание с shadcn: его дефолтная тема приходит в oklch/hsl — при установке **заменить дефолтные переменные темы на нашу палитру в RGB**, дефолт в репо не оставлять.
+Палитра (заполняется после фазы 1 из выхода Claude Design; до заполнения — цветовые задачи не выполнять):
+ 
+| Токен | Значение | Роль |
+|---|---|---|
+| `--color-bg` | rgb(_, _, _) | Фон страниц |
+| `--color-surface` | rgb(_, _, _) | Карточки, поля форм |
+| `--color-text` | rgb(_, _, _) | Основной текст |
+| `--color-text-muted` | rgb(_, _, _) | Вторичный текст, подписи |
+| `--color-accent` | rgb(_, _, _) | CTA, ссылки, акцент моста |
+| `--color-success` | rgb(_, _, _) | Успешная отправка формы |
+| `--color-error` | rgb(_, _, _) | Ошибки валидации |
+ 
+## 4. Размеры: только px
+ 
+- Все размерные значения — **в пикселях**: шрифты, межстрочные, отступы, скругления, ширины, брейкпоинты, размеры иконок.
+- **Запрещены**: `rem`, `em`, `ch`, `vw/vh` в токенах и компонентах (исключения: `line-height` допустим unitless-множителем, если так зафиксировано в шкале; `%` и `vh` — только для сугубо layout-задач вроде `width: 100%` или фуллскрин-hero, не для типографики и отступов).
+- Tailwind настраивается так, чтобы шкалы spacing/fontSize отдавали px; произвольные значения — только px: `p-[24px]` допустимо, `p-[1.5rem]` — нет.
+- Шкалы (заполняются из выхода Claude Design):
+| Роль | Размер | Межстрочный | Начертание |
+|---|---|---|---|
+| Display / h1 | _ px | _ px | _ |
+| h2 | _ px | _ px | _ |
+| h3 | _ px | _ px | _ |
+| Body | _ px | _ px | _ |
+| Small / подписи | _ px | _ px | _ |
+ 
+- Шкала отступов: _, _, _, _, _ px (например 4 / 8 / 16 / 24 / 40 / 64)
+- Скругления: _ px (карточки), _ px (кнопки, поля)
+- Контейнер: max-width _ px; брейкпоинты: mobile до _ px, desktop от _ px
+## 5. Структура проекта
+ 
 ```
-astro dev --background
+src/
+  pages/            # роуты (.astro), api/lead.js
+  layouts/          # базовый layout, layout статьи
+  components/
+    ui/             # shadcn (JSX)
+    blocks/         # секции страниц: Hero, PainList, ServiceLadder, LeadForm...
+  content/
+    blog/           # MDX-статьи
+    cases/          # MDX-кейсы
+  styles/
+    tokens.css      # ЕДИНСТВЕННОЕ место определения цветов и размерных переменных
+    global.css
 ```
-
-Manage the background server with `astro dev stop`, `astro dev status`, and `astro dev logs`.
-
-## Documentation
-
-Full documentation: https://docs.astro.build
-
-Consult these guides before working on related tasks:
-
-- [Adding pages, dynamic routes, or middleware](https://docs.astro.build/en/guides/routing/)
-- [Working with Astro components](https://docs.astro.build/en/basics/astro-components/)
-- [Using React, Vue, Svelte, or other framework components](https://docs.astro.build/en/guides/framework-components/)
-- [Adding or managing content](https://docs.astro.build/en/guides/content-collections/)
-- [Adding styles or using Tailwind](https://docs.astro.build/en/guides/styling/)
-- [Supporting multiple languages](https://docs.astro.build/en/guides/internationalization/)
+ 
+- Тексты офферов не переписывать «покрасивее» — формулировки заголовков, болей и CTA зафиксированы в плане сайта и меняются только человеком.
+## 6. Правила для промптов (напоминание себе)
+ 
+- Каждый промпт: ссылка на этот файл + конкретная фаза/задача из плана + критерий приёмки.
+- Одна задача — один промпт. Не просить «сделай фазы 3–5 разом».
+- После генерации проверять: нет `.tsx`, нет hex/hsl в коде, нет rem, нет самовольных зависимостей (`git diff package.json`).
+ 
