@@ -1,18 +1,12 @@
 ---
 /**
- * Секция заявки на бесплатное ревью ТЗ (ядро §3.2, §3.3 п.2; план §4.1). ВАЖНО:
- * на фазе 3 форма — СТАТИЧНАЯ разметка (никакой отправки, /api/lead или
- * client:*-острова). Поля размечены семантически (name, label/for, aria), чтобы
- * на фазе 4 «оживить» React-островом без переписывания. Секция-обёртка имеет
- * id="form" — на неё ведут якоря #form. Сегментный акцент — kobalt (--accent).
- *
- * Поля (план §4.1, it): имя, контакт (email/Telegram), ссылка на ТЗ/бэклог.
- * honeypot-поле (company) заложено скрытым — задел на антиспам фазы 4, без логики.
+ * Секция заявки на бесплатное ревью ТЗ (ядро §3.2, §3.3 п.2; план §4.1). Форма
+ * (правая колонка) оживлена React-островом LeadForm (задача 4.3) — client:visible.
+ * Секция-обёртка имеет id="form" — на неё ведут якоря #form. Сегментный акцент —
+ * kobalt (--accent).
  */
 import { CONTACTS } from '@/consts';
-
-const fieldBase =
-  "h-[var(--control-height)] w-full rounded-lg border-2 border-line bg-surface px-[var(--space-4)] text-body text-ink transition-colors duration-[var(--motion-card)] focus:border-accent";
+import LeadForm from '@/components/LeadForm.jsx';
 ---
 
 <section id="form" class="border-t-2 border-line bg-bg">
@@ -45,84 +39,6 @@ const fieldBase =
       </div>
     </div>
 
-    <form
-      data-reveal
-      data-reveal-delay="100"
-      method="post"
-      class="flex flex-col gap-[var(--space-4)] rounded-2xl border-2 border-line bg-surface p-[var(--space-6)] md:p-[var(--space-7)]"
-    >
-      {/* honeypot — скрытое поле-ловушка для ботов (логика — фаза 4) */}
-      <div class="hidden" aria-hidden="true">
-        <label for="lead-company">Не заполняйте это поле</label>
-        <input
-          id="lead-company"
-          name="company"
-          type="text"
-          tabindex="-1"
-          autocomplete="off"
-        />
-      </div>
-
-      <label class="flex flex-col gap-[var(--space-2)]" for="lead-name">
-        <span class="text-sm font-medium text-ink">Как вас зовут</span>
-        <input
-          id="lead-name"
-          name="name"
-          type="text"
-          autocomplete="name"
-          placeholder="Имя"
-          class={fieldBase}
-        />
-      </label>
-
-      <label class="flex flex-col gap-[var(--space-2)]" for="lead-contact">
-        <span class="text-sm font-medium text-ink">Email или Telegram</span>
-        <input
-          id="lead-contact"
-          name="contact"
-          type="text"
-          autocomplete="email"
-          placeholder="you@company.ru или @ник"
-          class={fieldBase}
-        />
-      </label>
-
-      <label class="flex flex-col gap-[var(--space-2)]" for="lead-link">
-        <span class="text-sm font-medium text-ink">Ссылка на ТЗ или бэклог</span>
-        <input
-          id="lead-link"
-          name="link"
-          type="url"
-          placeholder="Notion, Google Docs, Confluence…"
-          class={fieldBase}
-        />
-        <span class="text-caption text-muted">
-          Нет документа? Опишите продукт парой фраз в этом поле — тоже сработает.
-        </span>
-      </label>
-
-      <label class="flex cursor-pointer items-start gap-[var(--space-3)]" for="lead-agree">
-        <input
-          id="lead-agree"
-          name="agree"
-          type="checkbox"
-          class="mt-[3px] h-[18px] w-[18px] shrink-0 cursor-pointer"
-          style="accent-color:var(--accent)"
-        />
-        <span class="text-sm text-muted">
-          Согласен на обработку персональных данных по <a
-            href="/privacy"
-            class="text-accent hover:text-accent-hover">политике конфиденциальности</a
-          >
-        </span>
-      </label>
-
-      <button
-        type="submit"
-        class="text-button inline-flex h-[var(--control-height)] items-center justify-center rounded-xl border-2 border-transparent bg-accent px-6 text-belyi transition-colors duration-[var(--motion-button)] hover:border-ink hover:bg-transparent hover:text-ink"
-      >
-        Получить бесплатное ревью ТЗ
-      </button>
-    </form>
+    <LeadForm segment="it" client:visible />
   </div>
 </section>

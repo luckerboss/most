@@ -1,7 +1,6 @@
 ---
 /**
- * «Кто за этим стоит»: placeholder-фото (диагональная штриховка, нейтральна в
- * обеих темах) + короткий текст о команде из макета. Реальное фото — позже.
+ * «Кто за этим стоит»: фото команды + короткий текст о команде из макета.
  */
 const bullets = [
   "Начинаем с диагностики, а не с кода",
@@ -15,16 +14,17 @@ const bullets = [
     class="section-shell grid items-center gap-[var(--space-8)] py-[var(--space-10)] md:gap-[var(--space-10)] md:py-[var(--space-12)]"
     style="grid-template-columns:repeat(auto-fit,minmax(min(420px,100%),1fr))"
   >
-    <!-- Placeholder-фото -->
     <div
       data-reveal
       class="relative flex min-h-[360px] items-center justify-center overflow-hidden rounded-2xl border-2 border-line"
-      style="background:repeating-linear-gradient(-45deg,var(--bg),var(--bg) 12px,var(--hover) 12px,var(--hover) 24px)"
     >
-      <span
-        class="text-mono-caption rounded-md border-2 border-dashed border-line2 bg-surface px-[var(--space-4)] py-[10px] text-muted"
-        >фото: рабочая сессия команды</span
-      >
+      <img
+        src="/team.png"
+        alt="Команда за рабочей сессией"
+        loading="lazy"
+        decoding="async"
+        class="h-full w-full object-cover"
+      />
     </div>
 
     <div
