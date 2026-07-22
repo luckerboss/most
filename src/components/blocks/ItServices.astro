@@ -1,0 +1,82 @@
+---
+/**
+ * «Что мы закрываем» — форматы работы аналитика: discovery, проектирование,
+ * разработка по SRS, аналитик в команде (ядро §3.2). Карточки с mono-тегами
+ * артефактов. Акцент — kobalt. Ссылка «Цены и сроки» ведёт на /services.
+ */
+const formats = [
+  {
+    meta: "01 · 1–2 недели",
+    title: "Discovery / диагностика",
+    text: "Интервью со стейкхолдерами, границы системы, риски, карта процессов как есть. Артефакт, который можно показать инвестору.",
+    tags: ["stakeholder map", "scope", "риски"],
+  },
+  {
+    meta: "02 · 2–4 недели",
+    title: "Проектирование",
+    text: "SRS, декомпозиция на user story с критериями приёмки, схемы данных и интеграций, кликабельный прототип ключевых сценариев.",
+    tags: ["SRS", "use case", "прототип"],
+    delay: 60,
+  },
+  {
+    meta: "03 · от 1,5 месяцев",
+    title: "Разработка по SRS",
+    text: "Строим систему по спецификации — своей командой или вместе с вашей. Приёмка по критериям, а не «по ощущениям».",
+    tags: ["MVP", "приёмка"],
+    delay: 120,
+  },
+  {
+    meta: "04 · по подписке",
+    title: "Аналитик в команде",
+    text: "Ведём бэклог, готовим story к спринтам, держим документацию актуальной. Часть недели — ваш аналитик.",
+    tags: ["backlog", "grooming"],
+    delay: 180,
+  },
+];
+---
+
+<section class="bg-bg">
+  <div class="section-shell py-[var(--space-10)] md:py-[var(--space-12)]">
+    <div
+      data-reveal
+      class="flex flex-wrap items-end justify-between gap-[var(--space-4)]"
+    >
+      <div class="flex max-w-[640px] flex-col gap-[var(--space-3)]">
+        <span class="text-overline text-muted">Форматы работы</span>
+        <h2 class="text-h2 text-ink">Что мы закрываем</h2>
+      </div>
+      <a
+        href="/services"
+        class="text-button inline-flex items-center gap-[var(--space-2)] text-accent no-underline transition-colors duration-[var(--motion-card)] hover:text-accent-hover"
+      >
+        Цены и сроки <span aria-hidden="true">→</span>
+      </a>
+    </div>
+
+    <div
+      class="mt-[var(--space-8)] grid gap-[var(--space-5)]"
+      style="grid-template-columns:repeat(auto-fit,minmax(min(300px,100%),1fr))"
+    >
+      {
+        formats.map((f) => (
+          <div
+            data-reveal
+            data-reveal-delay={f.delay}
+            class="flex flex-col gap-[14px] rounded-2xl border-2 border-line bg-surface p-[var(--space-7)]"
+          >
+            <span class="text-mono-caption text-accent">{f.meta}</span>
+            <span class="text-h4 text-ink">{f.title}</span>
+            <span class="text-body-s text-pretty text-muted">{f.text}</span>
+            <div class="mt-auto flex flex-wrap gap-[var(--space-2)] pt-[var(--space-1)]">
+              {f.tags.map((t) => (
+                <span class="text-mono-caption rounded-sm border-2 border-line px-[var(--space-2)] py-[3px] text-muted">
+                  {t}
+                </span>
+              ))}
+            </div>
+          </div>
+        ))
+      }
+    </div>
+  </div>
+</section>

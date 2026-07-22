@@ -1,0 +1,73 @@
+---
+/**
+ * Дифференциатор — смысловое ядро /it (ядро §3.2): SRS независим от исполнителя.
+ * Всегда-тёмная секция (--dark-section, как CtaSection): токены «на тёмном фоне»
+ * фиксированы и не зависят от темы страницы (belyi / text-inverse / kobalt-light /
+ * grafit-surface / grafit-line). Правая карточка — схема структуры SRS (моно).
+ */
+const bullets = [
+  "Терминология и структура — по устоявшимся практикам, без «внутреннего жаргона»",
+  "Каждое требование проверяемо: есть критерии приёмки и граничные случаи",
+  "Схемы и прототипы — в исходниках, а не картинками в чате",
+];
+
+const srsLines = [
+  { text: "1. Цели и границы системы" },
+  { text: "2. Роли и сценарии", note: "(use case)" },
+  { text: "3. Функциональные требования" },
+  { text: "└ критерии приёмки, граничные случаи", muted: true, indent: true },
+  { text: "4. Данные и интеграции" },
+  { text: "5. Нефункциональные требования" },
+  { text: "6. Прототипы ключевых экранов" },
+];
+---
+
+<section class="bg-dark-section">
+  <div
+    class="section-shell grid items-center gap-[var(--space-8)] py-[var(--space-10)] md:gap-[var(--space-10)] md:py-[var(--space-12)]"
+    style="grid-template-columns:repeat(auto-fit,minmax(min(420px,100%),1fr))"
+  >
+    <div data-reveal class="flex flex-col gap-[var(--space-5)]">
+      <span class="text-overline text-kobalt-light">Дифференциатор</span>
+      <h2 class="text-h2 text-pretty text-belyi">
+        SRS написан так, что по нему может работать любая команда
+      </h2>
+      <p class="text-body-article text-pretty text-text-inverse">
+        Мы сознательно не привязываем вас к себе. Спецификация — самостоятельный
+        продукт: отдайте её своей команде, другому подрядчику или на тендер. Если
+        после проектирования вы уйдёте строить с другими — документ выдержит.
+      </p>
+      <ul class="flex flex-col gap-[14px]">
+        {
+          bullets.map((b) => (
+            <li class="flex items-start gap-[14px]">
+              <span
+                aria-hidden="true"
+                class="mt-[7px] h-[10px] w-[10px] shrink-0 rounded-[2px] bg-kobalt-light"
+              />
+              <span class="text-body text-text-inverse">{b}</span>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+
+    <div
+      data-reveal
+      data-reveal-delay="120"
+      aria-hidden="true"
+      class="text-mono-caption flex flex-col gap-[var(--space-2)] rounded-2xl border-2 border-grafit-line bg-grafit-surface p-[var(--space-6)] text-text-inverse md:p-[var(--space-7)]"
+    >
+      <span class="text-text-inverse-muted">// SRS · структура документа</span>
+      {
+        srsLines.map((l) => (
+          <span class:list={[l.muted && "text-text-inverse-muted", l.indent && "pl-[18px]"]}>
+            {l.text}
+            {l.note && <span class="text-text-inverse-muted"> {l.note}</span>}
+          </span>
+        ))
+      }
+      <span class="mt-[var(--space-2)] text-kobalt-light">✓ передаваемо любой команде</span>
+    </div>
+  </div>
+</section>

@@ -1,14 +1,35 @@
 ---
 /**
- * Блок доверия: малый бизнес покупает у людей. Placeholder-фото (диагональная
- * штриховка, нейтрально в обеих темах) + человеческое «кто это делает» без
- * терминов (ядро §3.1). Реальное фото подставляется позже. Акцент — malahit.
+ * Блок доверия: клиент покупает у людей. Placeholder-фото (диагональная
+ * штриховка, нейтрально в обеих темах) + «кто это делает». Реальное фото
+ * подставляется позже. Тексты и акцент параметризованы: дефолты — для /business
+ * (акцент malahit, язык без терминов, ядро §3.1); /it передаёт свою копию и
+ * акцент kobalt. Основатель — один и тот же человек на обоих лендингах.
+ *
+ * @type {{
+ *   accent?: "green" | "accent",   // сегментный акцент (дефолт — malahit)
+ *   eyebrow?: string,
+ *   heading?: string,
+ *   paragraph?: string,
+ *   bullets?: string[],
+ *   photoCaption?: string,
+ * }}
  */
-const bullets = [
-  "Каждый шаг — с понятной ценой и понятным результатом",
-  "Все договорённости — на бумаге, без «мы же говорили»",
-  "Результат каждого шага можно забрать и использовать без нас",
-];
+const {
+  accent = "green",
+  eyebrow = "Кто это делает",
+  heading = "Мы объясняем словами, а не терминами",
+  paragraph = "Мы — системные аналитики с многолетним опытом в коммерческой разработке. Наша работа — сначала понять, как устроен ваш бизнес, и только потом предлагать решение. Если программа не нужна — так и скажем.",
+  bullets = [
+    "Каждый шаг — с понятной ценой и понятным результатом",
+    "Все договорённости — на бумаге, без «мы же говорили»",
+    "Результат каждого шага можно забрать и использовать без нас",
+  ],
+  photoCaption = "фото: разбор процессов с владельцем",
+} = Astro.props;
+
+// Литеральные классы (Tailwind сканирует исходники) — оба варианта присутствуют.
+const dotClass = accent === "accent" ? "bg-accent" : "bg-green";
 ---
 
 <section class="border-t-2 border-line bg-surface">
@@ -17,22 +38,16 @@ const bullets = [
     style="grid-template-columns:repeat(auto-fit,minmax(min(420px,100%),1fr))"
   >
     <div data-reveal class="flex flex-col gap-[var(--space-5)]">
-      <span class="text-overline text-muted">Кто это делает</span>
-      <h2 class="text-h2 text-pretty text-ink">
-        Мы объясняем словами, а не терминами
-      </h2>
-      <p class="text-body-article text-pretty text-muted">
-        Мы — системные аналитики с многолетним опытом в коммерческой разработке.
-        Наша работа — сначала понять, как устроен ваш бизнес, и только потом
-        предлагать решение. Если программа не нужна — так и скажем.
-      </p>
+      <span class="text-overline text-muted">{eyebrow}</span>
+      <h2 class="text-h2 text-pretty text-ink">{heading}</h2>
+      <p class="text-body-article text-pretty text-muted">{paragraph}</p>
       <ul class="flex flex-col gap-[14px]">
         {
           bullets.map((b) => (
             <li class="flex items-start gap-[14px]">
               <span
                 aria-hidden="true"
-                class="mt-[7px] h-[10px] w-[10px] shrink-0 rounded-[2px] bg-green"
+                class:list={["mt-[7px] h-[10px] w-[10px] shrink-0 rounded-[2px]", dotClass]}
               />
               <span class="text-body text-ink">{b}</span>
             </li>
@@ -41,7 +56,7 @@ const bullets = [
       </ul>
     </div>
 
-    {/* Placeholder-фото — заменить реальным снимком разбора процессов (TODO) */}
+    {/* Placeholder-фото — заменить реальным снимком (TODO) */}
     <div
       data-reveal
       data-reveal-delay="120"
@@ -50,7 +65,7 @@ const bullets = [
     >
       <span
         class="text-mono-caption rounded-md border-2 border-dashed border-line2 bg-surface px-[var(--space-4)] py-[10px] text-muted"
-        >фото: разбор процессов с владельцем</span
+        >{photoCaption}</span
       >
     </div>
   </div>

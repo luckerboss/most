@@ -1,0 +1,64 @@
+---
+/**
+ * «Если это про ваш проект» — узнаваемые симптомы стартапов и IT-команд без
+ * системного анализа (ядро §3.2). Аудитория с IT-бэкграундом: термины уместны
+ * (бэклог, критерии приёмки, discovery, user story). Формулировки — из ядра.
+ */
+const pains = [
+  {
+    title: "Фичи переделываются по два раза",
+    text: "Разработка «поняла по-своему», продакт «имел в виду другое». Спринт сгорел, результат — в корзину.",
+  },
+  {
+    title: "Бэклог в одну строку",
+    text: "«Как пользователь, я хочу оплату» — и всё. Ни сценариев, ни ограничений, ни критериев приёмки.",
+    delay: 60,
+  },
+  {
+    title: "Инвестору нечего показать",
+    text: "Есть код и энтузиазм. Нет ни схемы продукта, ни прототипа, ни документа, который можно положить на стол.",
+    delay: 120,
+  },
+  {
+    title: "Discovery не было",
+    text: "Сразу начали спринты. Через три месяца выяснилось, что половина сделанного не нужна пользователям.",
+  },
+  {
+    title: "Приёмка = «ну, работает же»",
+    text: "Критериев нет, поэтому спор «баг или фича» решается голосом самого уставшего.",
+    delay: 60,
+  },
+  {
+    title: "Смена подрядчика = археология",
+    text: "Знания о системе живут в переписках и головах. Новая команда месяц раскапывает, как это устроено.",
+    delay: 120,
+  },
+];
+---
+
+<section class="border-t-2 border-line bg-surface">
+  <div class="section-shell py-[var(--space-10)] md:py-[var(--space-12)]">
+    <div data-reveal class="flex max-w-[640px] flex-col gap-[var(--space-3)]">
+      <span class="text-overline text-muted">Симптомы</span>
+      <h2 class="text-h2 text-ink">Если это про ваш проект</h2>
+    </div>
+
+    <div
+      class="mt-[var(--space-8)] grid gap-[var(--space-5)]"
+      style="grid-template-columns:repeat(auto-fit,minmax(min(320px,100%),1fr))"
+    >
+      {
+        pains.map((p) => (
+          <div
+            data-reveal
+            data-reveal-delay={p.delay}
+            class="flex flex-col gap-[var(--space-2)] rounded-2xl border-2 border-line bg-bg p-[var(--space-6)]"
+          >
+            <span class="text-h4 text-ink">{p.title}</span>
+            <span class="text-body-s text-pretty text-muted">{p.text}</span>
+          </div>
+        ))
+      }
+    </div>
+  </div>
+</section>

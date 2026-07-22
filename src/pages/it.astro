@@ -1,0 +1,31 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import ItHero from "@/components/blocks/ItHero.astro";
+import ItPains from "@/components/blocks/ItPains.astro";
+import ItServices from "@/components/blocks/ItServices.astro";
+import ItDifferentiator from "@/components/blocks/ItDifferentiator.astro";
+import FounderTrust from "@/components/blocks/FounderTrust.astro";
+import LeadFormIt from "@/components/blocks/LeadFormIt.astro";
+---
+
+<BaseLayout
+  title="Для стартапов и IT-команд — Мост"
+  description="Аналитик как сервис: discovery, SRS, user story с критериями приёмки и кликабельные прототипы — до того, как разработка сожжёт бюджет. Начните с бесплатного ревью ТЗ."
+>
+  <ItHero />
+  <ItPains />
+  <ItServices />
+  <ItDifferentiator />
+  <FounderTrust
+    accent="accent"
+    heading="Аналитики с опытом коммерческой разработки"
+    paragraph="Мы — системные аналитики: пишем требования и SRS, по которым команды строят продукты. Сначала разбираемся в задаче, ограничениях и интеграциях, потом проектируем — а не наоборот. Спецификация остаётся у вас и работает без нас."
+    bullets={[
+      "Каждое требование проверяемо — с критериями приёмки и граничными случаями",
+      "Все договорённости зафиксированы в документе, а не в переписке",
+      "Результат каждого этапа можно забрать и отдать любой команде",
+    ]}
+    photoCaption="фото: разбор требований с командой"
+  />
+  <LeadFormIt />
+</BaseLayout>
