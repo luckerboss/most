@@ -1,0 +1,64 @@
+---
+/**
+ * FAQ страницы услуг. Статичный аккордеон на нативных <details>/<summary> —
+ * без JS и без React-острова: работает и с отключённым скриптом, доступен с
+ * клавиатуры. Роль заголовка вопроса — font-h4 (в конвенции §4.1 h4 = аккордеон).
+ */
+const items = [
+  {
+    q: "Можно ли прийти сразу за разработкой?",
+    a: "Можно — если у вас уже есть проработанные требования: проверим их на бесплатном ревью. Если требований нет, разработка без диагностики и проектирования — лотерея за ваш счёт, мы так не работаем.",
+  },
+  {
+    q: "У нас своя команда разработки. Что тогда?",
+    a: "Отлично: заканчиваем на ступени проектирования. SRS написан так, что по нему может работать любая команда — ваша в том числе. При желании останемся рядом как аналитик по подписке.",
+  },
+  {
+    q: "Вы работаете удалённо?",
+    a: "Да. База — Киров, работаем со всей Россией. Интервью и сессии — по видеосвязи, все артефакты — в общих документах, договор и акты — в ЭДО.",
+  },
+  {
+    q: "Почему цены — вилки, а не точные?",
+    a: "Точную цену честно назвать можно только после погружения: она зависит от числа процессов, ролей и интеграций. Вилка — это границы, за которые мы не выходим; точная смета фиксируется до старта ступени и по ходу не меняется.",
+  },
+];
+---
+
+<section class="border-t-2 border-line bg-surface">
+  <div
+    class="section-shell grid items-start gap-[var(--space-7)] py-[var(--space-10)] md:gap-[var(--space-10)] md:py-[var(--space-11)]"
+    style="grid-template-columns:repeat(auto-fit,minmax(min(340px,100%),1fr))"
+  >
+    <div data-reveal class="flex flex-col gap-[var(--space-3)]">
+      <span class="text-overline text-muted">Вопросы</span>
+      <h2 class="text-h2 text-ink">Что спрашивают перед стартом</h2>
+    </div>
+
+    <div
+      data-reveal
+      data-reveal-delay={80}
+      class="flex flex-col overflow-hidden rounded-2xl border-2 border-line bg-surface"
+    >
+      {
+        items.map((f, i) => (
+          <details class:list={["group", i > 0 && "border-t-2 border-line"]}>
+            <summary
+              class="text-h4 flex cursor-pointer list-none items-center justify-between gap-[var(--space-4)] px-[var(--space-6)] py-[var(--space-5)] text-ink transition-colors duration-[var(--motion-card)] hover:bg-bg [&::-webkit-details-marker]:hidden"
+            >
+              {f.q}
+              <span
+                aria-hidden="true"
+                class="flex-shrink-0 text-[14px] text-accent transition-transform duration-[var(--motion-accordion)] group-open:rotate-180"
+              >
+                ▼
+              </span>
+            </summary>
+            <p class="text-body-s px-[var(--space-6)] pb-[var(--space-5)] text-muted text-pretty">
+              {f.a}
+            </p>
+          </details>
+        ))
+      }
+    </div>
+  </div>
+</section>

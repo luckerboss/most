@@ -1,0 +1,95 @@
+---
+/**
+ * Карточка одной ступени лестницы услуг. Переиспользуется на /services (полная
+ * версия) и на /business, /it (упрощённо — часть полей можно не передавать).
+ *
+ * Полоски сверху показывают, какая часть пути пройдена к этой ступени: первые
+ * `filled` из 4 — акцентом, остальные — линией.
+ *
+ * @type {{
+ *   n: string,               // «1 / 4» — номер ступени
+ *   filled: number,          // сколько из 4 полосок закрашено (1..4)
+ *   time: string,            // срок, напр. «1–2 недели»
+ *   name: string,            // название ступени
+ *   price: string,           // цена-вилка или условие
+ *   includes?: string[],     // блок «что входит»
+ *   limits?: string,         // блок «границы» — чего НЕ делаем
+ *   own?: string,            // почему ступень самоценна
+ *   delay?: number,          // задержка reveal-анимации, мс
+ * }}
+ */
+const {
+  n,
+  filled,
+  time,
+  name,
+  price,
+  includes = [],
+  limits,
+  own,
+  delay,
+} = Astro.props;
+
+const bars = [1, 2, 3, 4];
+---
+
+<div
+  data-reveal
+  data-reveal-delay={delay}
+  class="flex flex-col gap-[var(--space-4)] rounded-2xl border-2 border-line bg-bg p-[var(--space-6)] transition-[border-color,transform,box-shadow] duration-[var(--motion-card)] hover:-translate-y-[3px] hover:border-accent hover:shadow-[0_12px_28px_var(--shadow-card)]"
+>
+  <div class="flex items-center gap-[var(--space-2)]">
+    {
+      bars.map((i) => (
+        <span
+          class:list={[
+            "h-1.5 flex-1 rounded-full",
+            i <= filled ? "bg-accent" : "bg-line",
+          ]}
+        />
+      ))
+    }
+  </div>
+
+  <div class="flex items-baseline justify-between gap-[var(--space-2)]">
+    <span class="text-mono-caption text-accent">ступень {n}</span>
+    <span class="text-mono-caption text-muted">{time}</span>
+  </div>
+
+  <span class="text-h3 text-ink">{name}</span>
+  <span class="text-h4 text-accent">{price}</span>
+
+  {
+    includes.length > 0 && (
+      <div class="flex flex-col gap-[var(--space-2)]">
+        <span class="text-overline text-muted">Что входит</span>
+        {includes.map((item) => (
+          <span class="text-body-s flex items-start gap-[var(--space-2)] text-ink">
+            <span
+              aria-hidden="true"
+              class="mt-2 h-2 w-2 flex-shrink-0 rounded-[2px] bg-green"
+            />
+            {item}
+          </span>
+        ))}
+      </div>
+    )
+  }
+
+  {
+    limits && (
+      <div class="flex flex-col gap-[var(--space-2)] border-t-2 border-dashed border-line2 pt-[var(--space-4)]">
+        <span class="text-overline text-muted">Границы</span>
+        <span class="text-body-s text-muted">{limits}</span>
+      </div>
+    )
+  }
+
+  {
+    own && (
+      <div class="mt-auto rounded-lg bg-green-tint px-[var(--space-4)] py-[var(--space-3)]">
+        <span class="text-caption text-green-hover">{own}</span>
+      </div>
+    )
+  }
+</div>

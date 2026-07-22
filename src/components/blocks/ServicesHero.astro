@@ -1,0 +1,30 @@
+---
+/**
+ * Hero страницы услуг: надзаголовок, заголовок «лестница из четырёх ступеней»,
+ * подводка про самоценность ступеней. Фоновая мм-сетка (мотив «схемы») — на
+ * токене --line, живёт в обеих темах, замаскирована радиальным градиентом.
+ */
+---
+
+<section class="relative overflow-hidden bg-bg">
+  <div
+    aria-hidden="true"
+    class="pointer-events-none absolute inset-0 opacity-40"
+    style="background-image:linear-gradient(var(--line) 1px,transparent 1px),linear-gradient(90deg,var(--line) 1px,transparent 1px);background-size:28px 28px;-webkit-mask-image:radial-gradient(ellipse 70% 90% at 80% 20%,black,transparent 70%);mask-image:radial-gradient(ellipse 70% 90% at 80% 20%,black,transparent 70%)"
+  >
+  </div>
+
+  <div
+    class="section-shell relative flex flex-col items-start gap-[var(--space-5)] py-[var(--space-10)] md:py-[var(--space-11)]"
+  >
+    <span data-reveal class="text-overline text-muted">Услуги и цены</span>
+    <h1 data-reveal class="text-h1 max-w-[820px] text-ink text-pretty">
+      Лестница из четырёх ступеней
+    </h1>
+    <p data-reveal class="text-lead max-w-[640px] text-muted text-pretty">
+      Каждая ступень самоценна: можно остановиться после любой — результат
+      останется у вас и будет работать без нас. Следующая ступень всегда
+      опирается на предыдущую.
+    </p>
+  </div>
+</section>

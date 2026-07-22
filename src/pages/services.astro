@@ -1,0 +1,25 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import ServicesHero from "@/components/blocks/ServicesHero.astro";
+import ServiceLadderFull from "@/components/blocks/ServiceLadderFull.astro";
+import ServicesStart from "@/components/blocks/ServicesStart.astro";
+import ServicesFaq from "@/components/blocks/ServicesFaq.astro";
+import CtaSection from "@/components/blocks/CtaSection.astro";
+---
+
+<BaseLayout
+  title="Услуги и цены — Мост"
+  description="Лестница из четырёх ступеней: диагностика, проектирование, разработка, поддержка. Каждая ступень самоценна — можно остановиться после любой."
+>
+  <ServicesHero />
+  <ServiceLadderFull />
+  <ServicesStart />
+  <ServicesFaq />
+  <CtaSection
+    title="Первая ступень — самая дешёвая. И самая полезная"
+    text="Диагностика стоит меньше, чем месяц потерянных заявок, — и даже без продолжения оставит вам карту проблем и план."
+    note={null}
+    primary={{ label: "Записаться на диагностику", href: "/business#form" }}
+    secondary={{ label: "Получить ревью ТЗ", href: "/it#form" }}
+  />
+</BaseLayout>

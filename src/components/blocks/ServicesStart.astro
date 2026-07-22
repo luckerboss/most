@@ -1,0 +1,70 @@
+---
+/**
+ * «С какой ступени начать?» — развилка на два сегмента: свой бизнес → почти
+ * всегда с диагностики; продукт/команда → бесплатное ревью ТЗ. Каждая карточка
+ * целиком кликабельна и ведёт на форму соответствующего лендинга (фаза 3–4).
+ */
+const routes = [
+  {
+    kicker: "свой бизнес",
+    title:
+      "Почти всегда — с диагностики: она покажет, нужна ли вам вообще система",
+    cta: "Записаться на диагностику",
+    href: "/business#form",
+    accent: "green",
+    delay: undefined,
+  },
+  {
+    kicker: "продукт или команда",
+    title:
+      "Пришлите ТЗ или бэклог — бесплатное ревью подскажет, какая ступень ваша",
+    cta: "Получить ревью ТЗ",
+    href: "/it#form",
+    accent: "accent",
+    delay: 100,
+  },
+];
+---
+
+<section class="bg-bg">
+  <div class="section-shell py-[var(--space-10)] md:py-[var(--space-11)]">
+    <h2 data-reveal class="text-h2 text-ink">С какой ступени начать?</h2>
+
+    <div
+      class="mt-[var(--space-7)] grid gap-[var(--space-6)]"
+      style="grid-template-columns:repeat(auto-fit,minmax(min(380px,100%),1fr))"
+    >
+      {
+        routes.map((r) => (
+          <a
+            href={r.href}
+            data-reveal
+            data-reveal-delay={r.delay}
+            class:list={[
+              "flex flex-col gap-[var(--space-3)] rounded-2xl border-2 border-line bg-surface p-[var(--space-6)] text-ink no-underline transition-[border-color,transform,box-shadow] duration-[var(--motion-card)] hover:-translate-y-[3px] hover:shadow-[0_12px_28px_var(--shadow-card)]",
+              r.accent === "green" ? "hover:border-green" : "hover:border-accent",
+            ]}
+          >
+            <span
+              class:list={[
+                "text-overline",
+                r.accent === "green" ? "text-green" : "text-accent",
+              ]}
+            >
+              {r.kicker}
+            </span>
+            <span class="text-h4 text-ink text-pretty">{r.title}</span>
+            <span
+              class:list={[
+                "text-button inline-flex items-center gap-[var(--space-2)]",
+                r.accent === "green" ? "text-green" : "text-accent",
+              ]}
+            >
+              {r.cta} <span aria-hidden="true">→</span>
+            </span>
+          </a>
+        ))
+      }
+    </div>
+  </div>
+</section>

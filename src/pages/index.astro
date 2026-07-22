@@ -46,41 +46,6 @@ const latestPosts = [
   title="Мост — от хаоса в процессах к работающей системе"
   description="Системный анализ, требования и разработка для малого бизнеса и продуктовых команд. Начинаем с диагностики, а не с кода."
 >
-  {/* Включаем reveal-состояние до отрисовки секций: только если движение
-      разрешено и есть IntersectionObserver — иначе контент всегда виден. */}
-  <script is:inline>
-    (function () {
-      try {
-        if (
-          !("IntersectionObserver" in window) ||
-          window.matchMedia("(prefers-reduced-motion: reduce)").matches
-        ) {
-          return;
-        }
-        document.documentElement.classList.add("reveal-on");
-        document.addEventListener("DOMContentLoaded", function () {
-          var io = new IntersectionObserver(
-            function (entries, obs) {
-              entries.forEach(function (e) {
-                if (!e.isIntersecting) return;
-                var el = e.target;
-                var d = parseInt(el.getAttribute("data-reveal-delay"), 10) || 0;
-                setTimeout(function () {
-                  el.classList.add("is-visible");
-                }, d);
-                obs.unobserve(el);
-              });
-            },
-            { threshold: 0.12, rootMargin: "0px 0px -40px 0px" }
-          );
-          document.querySelectorAll("[data-reveal]").forEach(function (el) {
-            io.observe(el);
-          });
-        });
-      } catch (e) {}
-    })();
-  </script>
-
   <Hero />
   <SegmentFork />
   <ServiceLadder />

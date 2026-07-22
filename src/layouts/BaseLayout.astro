@@ -2,6 +2,7 @@
 import "@fontsource-variable/onest";
 import "@fontsource-variable/golos-text";
 import "@fontsource/jetbrains-mono";
+import "@fontsource/jetbrains-mono/500.css";
 import "@/styles/global.css";
 
 import Header from "@/components/blocks/Header.astro";
@@ -16,6 +17,7 @@ const { title = "Мост", description = "" } = Astro.props;
 
 <html lang="ru">
   <head>
+    <meta charset="utf-8" />
     <script is:inline>
       // Выставляем тему до первой отрисовки, чтобы не было мигания (FOUC).
       // Приоритет: сохранённый выбор из localStorage → системная тема.
@@ -32,7 +34,41 @@ const { title = "Мост", description = "" } = Astro.props;
         document.documentElement.setAttribute("data-theme", theme);
       })();
     </script>
-    <meta charset="utf-8" />
+    {/* Включаем reveal-состояние до отрисовки секций: только если движение
+        разрешено и есть IntersectionObserver — иначе контент всегда виден. */}
+    <script is:inline>
+      (function () {
+        try {
+          if (
+            !("IntersectionObserver" in window) ||
+            window.matchMedia("(prefers-reduced-motion: reduce)").matches
+          ) {
+            return;
+          }
+          document.documentElement.classList.add("reveal-on");
+          document.addEventListener("DOMContentLoaded", function () {
+            var io = new IntersectionObserver(
+              function (entries, obs) {
+                entries.forEach(function (e) {
+                  if (!e.isIntersecting) return;
+                  var el = e.target;
+                  var d =
+                    parseInt(el.getAttribute("data-reveal-delay"), 10) || 0;
+                  setTimeout(function () {
+                    el.classList.add("is-visible");
+                  }, d);
+                  obs.unobserve(el);
+                });
+              },
+              { threshold: 0.12, rootMargin: "0px 0px -40px 0px" }
+            );
+            document.querySelectorAll("[data-reveal]").forEach(function (el) {
+              io.observe(el);
+            });
+          });
+        } catch (e) {}
+      })();
+    </script>
     <meta name="viewport" content="width=device-width" />
     <meta name="generator" content={Astro.generator} />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
