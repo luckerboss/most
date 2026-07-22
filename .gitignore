@@ -20,6 +20,9 @@ pnpm-debug.log*
 AGENTS.md 
 CLAUDE.md 
 
+# lead form fallback (local dev)
+leads-fallback.jsonl
+
 # macOS-specific files
 .DS_Store
 
