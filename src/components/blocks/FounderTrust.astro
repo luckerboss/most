@@ -1,0 +1,57 @@
+---
+/**
+ * Блок доверия: малый бизнес покупает у людей. Placeholder-фото (диагональная
+ * штриховка, нейтрально в обеих темах) + человеческое «кто это делает» без
+ * терминов (ядро §3.1). Реальное фото подставляется позже. Акцент — malahit.
+ */
+const bullets = [
+  "Каждый шаг — с понятной ценой и понятным результатом",
+  "Все договорённости — на бумаге, без «мы же говорили»",
+  "Результат каждого шага можно забрать и использовать без нас",
+];
+---
+
+<section class="border-t-2 border-line bg-surface">
+  <div
+    class="section-shell grid items-center gap-[var(--space-8)] py-[var(--space-10)] md:gap-[var(--space-10)] md:py-[var(--space-12)]"
+    style="grid-template-columns:repeat(auto-fit,minmax(min(420px,100%),1fr))"
+  >
+    <div data-reveal class="flex flex-col gap-[var(--space-5)]">
+      <span class="text-overline text-muted">Кто это делает</span>
+      <h2 class="text-h2 text-pretty text-ink">
+        Мы объясняем словами, а не терминами
+      </h2>
+      <p class="text-body-article text-pretty text-muted">
+        Мы — системные аналитики с многолетним опытом в коммерческой разработке.
+        Наша работа — сначала понять, как устроен ваш бизнес, и только потом
+        предлагать решение. Если программа не нужна — так и скажем.
+      </p>
+      <ul class="flex flex-col gap-[14px]">
+        {
+          bullets.map((b) => (
+            <li class="flex items-start gap-[14px]">
+              <span
+                aria-hidden="true"
+                class="mt-[7px] h-[10px] w-[10px] shrink-0 rounded-[2px] bg-green"
+              />
+              <span class="text-body text-ink">{b}</span>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+
+    {/* Placeholder-фото — заменить реальным снимком разбора процессов (TODO) */}
+    <div
+      data-reveal
+      data-reveal-delay="120"
+      class="relative flex min-h-[340px] items-center justify-center overflow-hidden rounded-2xl border-2 border-line"
+      style="background:repeating-linear-gradient(-45deg,var(--bg),var(--bg) 12px,var(--hover) 12px,var(--hover) 24px)"
+    >
+      <span
+        class="text-mono-caption rounded-md border-2 border-dashed border-line2 bg-surface px-[var(--space-4)] py-[10px] text-muted"
+        >фото: разбор процессов с владельцем</span
+      >
+    </div>
+  </div>
+</section>

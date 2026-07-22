@@ -1,0 +1,76 @@
+---
+/**
+ * «Что получаете» — три шага простым языком (ядро §3.1): диагностика,
+ * проект решения, разработка. Формат макета — горизонтальные строки с
+ * номером-бейджем, а не карточка-лестница ServiceStepCard (у которой цена,
+ * полоски прогресса и блок «границы» в терминах — здесь они не нужны и не
+ * ложатся по контенту, см. задачу фазы 3). Акцент — malahit. Язык без терминов.
+ */
+const steps = [
+  {
+    n: "1",
+    title: "Разбираемся, что происходит",
+    time: "1–2 недели",
+    text: "Смотрим, как у вас всё устроено на самом деле: куда приходят заявки, кто и что записывает, где теряются деньги. Итог — понятная карта проблем: что чинить в первую очередь и сколько это стоит вам сейчас.",
+  },
+  {
+    n: "2",
+    title: "Придумываем, как должно работать",
+    time: "2–4 недели",
+    text: "Описываем будущую систему простыми словами и картинками: что делает администратор, что — программа, где вы видите отчёты. Вы всё поймёте и утвердите до того, как что-то будет построено.",
+  },
+  {
+    n: "3",
+    title: "Строим и запускаем",
+    time: "от 1,5 месяцев",
+    text: "Делаем систему ровно по утверждённому плану, обучаем вас и команду, остаёмся на связи после запуска. Никаких «а это будет стоить ещё столько же».",
+  },
+];
+---
+
+<section class="bg-bg">
+  <div class="section-shell py-[var(--space-10)] md:py-[var(--space-12)]">
+    <div data-reveal class="flex max-w-[720px] flex-col gap-[var(--space-3)]">
+      <span class="text-overline text-muted">Как это происходит</span>
+      <h2 class="text-h2 text-ink">
+        Три шага — и на каждом можно остановиться
+      </h2>
+    </div>
+
+    <div
+      class="mt-[var(--space-8)] flex max-w-[880px] flex-col gap-[var(--space-5)]"
+    >
+      {
+        steps.map((s) => (
+          <div
+            data-reveal
+            class="flex gap-[var(--space-6)] rounded-2xl border-2 border-line bg-surface p-[var(--space-6)] md:p-[var(--space-7)]"
+          >
+            <span
+              aria-hidden="true"
+              class="text-mono-caption flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-xl bg-green font-bold text-belyi"
+            >
+              {s.n}
+            </span>
+            <div class="flex flex-col gap-[var(--space-2)]">
+              <div class="flex flex-wrap items-baseline gap-[var(--space-3)]">
+                <span class="text-h4 text-ink">{s.title}</span>
+                <span class="text-mono-caption text-muted">{s.time}</span>
+              </div>
+              <p class="text-body text-pretty text-muted">{s.text}</p>
+            </div>
+          </div>
+        ))
+      }
+    </div>
+
+    <p
+      data-reveal
+      class="mt-[var(--space-6)] max-w-[880px] text-body-s text-muted"
+    >
+      <span class="font-semibold text-green">Важно:</span> после каждого шага
+      результат остаётся у вас. Карту проблем и план можно отдать любым другим
+      исполнителям — мы не привязываем вас к себе.
+    </p>
+  </div>
+</section>

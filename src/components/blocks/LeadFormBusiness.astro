@@ -1,0 +1,150 @@
+---
+/**
+ * Секция заявки на диагностику (ядро §3.1, план §4.1). ВАЖНО: на фазе 3 форма —
+ * СТАТИЧНАЯ разметка (никакой отправки, /api/lead или client:*-острова). Поля
+ * размечены семантически (name, label/for, aria), чтобы на фазе 4 «оживить»
+ * React-островом без переписывания. Секция-обёртка имеет id="form" — на неё
+ * ведут якоря #form с других страниц. Сегментный акцент — malahit (зелёный).
+ *
+ * Поля (план §4.1, business): имя, телефон/Telegram, ниша (select), «что болит».
+ * honeypot-поле (company) заложено скрытым — задел на антиспам фазы 4, без логики.
+ */
+const fieldBase =
+  "h-[var(--control-height)] w-full rounded-lg border-2 border-line bg-surface px-[var(--space-4)] text-body text-ink transition-colors duration-[var(--motion-card)] focus:border-green";
+
+const niches = [
+  "Салон красоты",
+  "Фитнес или студия",
+  "Магазин",
+  "Кафе или доставка",
+  "Услуги",
+  "Другое",
+];
+---
+
+<section id="form" class="border-t-2 border-line bg-bg">
+  <div
+    class="section-shell grid items-start gap-[var(--space-8)] py-[var(--space-10)] md:gap-[var(--space-10)] md:py-[var(--space-12)]"
+    style="grid-template-columns:repeat(auto-fit,minmax(min(400px,100%),1fr))"
+  >
+    <div data-reveal class="flex flex-col gap-[var(--space-5)]">
+      <span class="text-overline text-muted">Первый шаг</span>
+      <h2 class="text-h2 text-pretty text-ink">Начните с диагностики</h2>
+      <p class="text-body-article text-pretty text-muted">
+        Даже если дальше ничего не закажете — у вас останется карта проблем: где
+        теряются заявки и деньги и что с этим делать. Напишем или позвоним в
+        течение рабочего дня.
+      </p>
+      <div
+        class="flex flex-col gap-[var(--space-2)] rounded-xl border-2 border-line bg-surface px-[var(--space-6)] py-[var(--space-5)]"
+      >
+        <span class="text-mono-caption text-muted">быстрее — напрямую:</span>
+        <a
+          href="https://t.me/el_castinho"
+          class="text-button text-green no-underline hover:text-green-hover"
+          >Telegram · @el_castinho</a
+        >
+        <a
+          href="tel:+79229731706"
+          class="text-button text-ink no-underline hover:text-muted"
+          >+7 922 973-17-06</a
+        >
+      </div>
+    </div>
+
+    <form
+      data-reveal
+      data-reveal-delay="100"
+      method="post"
+      class="flex flex-col gap-[var(--space-4)] rounded-2xl border-2 border-line bg-surface p-[var(--space-6)] md:p-[var(--space-7)]"
+    >
+      {/* honeypot — скрытое поле-ловушка для ботов (логика — фаза 4) */}
+      <div class="hidden" aria-hidden="true">
+        <label for="lead-company">Не заполняйте это поле</label>
+        <input
+          id="lead-company"
+          name="company"
+          type="text"
+          tabindex="-1"
+          autocomplete="off"
+        />
+      </div>
+
+      <label class="flex flex-col gap-[var(--space-2)]" for="lead-name">
+        <span class="text-sm font-medium text-ink">Как вас зовут</span>
+        <input
+          id="lead-name"
+          name="name"
+          type="text"
+          autocomplete="name"
+          placeholder="Имя"
+          class={fieldBase}
+        />
+      </label>
+
+      <label class="flex flex-col gap-[var(--space-2)]" for="lead-contact">
+        <span class="text-sm font-medium text-ink">Телефон или Telegram</span>
+        <input
+          id="lead-contact"
+          name="contact"
+          type="text"
+          autocomplete="tel"
+          placeholder="+7… или @ник"
+          class={fieldBase}
+        />
+      </label>
+
+      <label class="flex flex-col gap-[var(--space-2)]" for="lead-niche">
+        <span class="text-sm font-medium text-ink">Чем занимаетесь</span>
+        <span class="relative block">
+          <select
+            id="lead-niche"
+            name="niche"
+            class={`${fieldBase} cursor-pointer appearance-none pr-[var(--space-9)]`}
+          >
+            {niches.map((n) => <option>{n}</option>)}
+          </select>
+          <span
+            aria-hidden="true"
+            class="pointer-events-none absolute right-[var(--space-4)] top-1/2 -translate-y-1/2 text-[12px] text-muted"
+            >▼</span
+          >
+        </span>
+      </label>
+
+      <label class="flex flex-col gap-[var(--space-2)]" for="lead-pain">
+        <span class="text-sm font-medium text-ink">Что болит сильнее всего</span>
+        <textarea
+          id="lead-pain"
+          name="pain"
+          rows="4"
+          placeholder="Например: заявки приходят в три места, половину теряем…"
+          class="min-h-[96px] w-full resize-y rounded-lg border-2 border-line bg-surface px-[var(--space-4)] py-[var(--space-3)] text-body text-ink transition-colors duration-[var(--motion-card)] focus:border-green"
+        ></textarea>
+      </label>
+
+      <label class="flex cursor-pointer items-start gap-[var(--space-3)]" for="lead-agree">
+        <input
+          id="lead-agree"
+          name="agree"
+          type="checkbox"
+          class="mt-[3px] h-[18px] w-[18px] shrink-0 cursor-pointer"
+          style="accent-color:var(--green)"
+        />
+        <span class="text-sm text-muted">
+          Согласен на обработку персональных данных по <a
+            href="/privacy"
+            class="text-green hover:text-green-hover">политике конфиденциальности</a
+          >
+        </span>
+      </label>
+
+      <button
+        type="submit"
+        class="text-button inline-flex h-[var(--control-height)] items-center justify-center rounded-xl border-2 border-transparent bg-green px-6 text-belyi transition-colors duration-[var(--motion-button)] hover:border-ink hover:bg-transparent hover:text-ink"
+      >
+        Записаться на диагностику
+      </button>
+    </form>
+  </div>
+</section>

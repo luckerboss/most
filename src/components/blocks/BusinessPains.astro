@@ -1,0 +1,67 @@
+---
+/**
+ * «Узнаёте себя?» — узнаваемые сценарии малого бизнеса без IT-бэкграунда
+ * (ядро §3.1). Язык человеческий, про боли клиента; терминов нет. Соцсети не
+ * называем поимённо — только «мессенджеры» (ядро §3.3, п.4). Акцент — malahit.
+ */
+const pains = [
+  {
+    title: "Записи — в тетрадке",
+    text: "Или в голове у администратора. Он уволился — и вместе с ним ушла половина клиентской базы.",
+  },
+  {
+    title: "Заявки теряются",
+    text: "Пишут в мессенджеры, звонят, приходят с сайта. Кому-то не ответили — и он ушёл к соседям.",
+    delay: 60,
+  },
+  {
+    title: "Отчёты — «по ощущениям»",
+    text: "Сколько заработали в этом месяце и на чём — точно не знает никто. Решения принимаются наугад.",
+    delay: 120,
+  },
+  {
+    title: "Всё держится на вас",
+    text: "Уехали на неделю — и всё встало. Отпуск превращается в работу из другого города.",
+  },
+  {
+    title: "Программу уже покупали",
+    text: "CRM стоит, за неё платят — а записи всё равно в тетрадке. Никто не разобрался, зачем она.",
+    delay: 60,
+  },
+  {
+    title: "Страшно, что обманут",
+    text: "Айтишники говорят непонятно, обещают много, а что получится — неизвестно. Проверить нечем.",
+    delay: 120,
+  },
+];
+---
+
+<section class="border-t-2 border-line bg-surface">
+  <div class="section-shell py-[var(--space-10)] md:py-[var(--space-12)]">
+    <div
+      data-reveal
+      class="flex max-w-[640px] flex-col gap-[var(--space-3)]"
+    >
+      <span class="text-overline text-muted">Знакомые сценарии</span>
+      <h2 class="text-h2 text-ink">Узнаёте себя?</h2>
+    </div>
+
+    <div
+      class="mt-[var(--space-8)] grid gap-[var(--space-5)]"
+      style="grid-template-columns:repeat(auto-fit,minmax(min(320px,100%),1fr))"
+    >
+      {
+        pains.map((p) => (
+          <div
+            data-reveal
+            data-reveal-delay={p.delay}
+            class="flex flex-col gap-[var(--space-2)] rounded-2xl border-2 border-line bg-bg p-[var(--space-6)]"
+          >
+            <span class="text-h4 text-ink">{p.title}</span>
+            <span class="text-body-s text-pretty text-muted">{p.text}</span>
+          </div>
+        ))
+      }
+    </div>
+  </div>
+</section>

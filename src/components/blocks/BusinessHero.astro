@@ -1,0 +1,47 @@
+---
+/**
+ * Hero лендинга для малого бизнеса. Сегментный акцент — malahit (зелёный).
+ * Заголовок и подзаголовок зафиксированы (ядро §3.1) — не переписывать.
+ * Фоновая мм-сетка (мотив «схемы») на токене --line, живёт в обеих темах,
+ * замаскирована радиальным градиентом. CTA ведёт на форму-якорь #form.
+ */
+---
+
+<section class="relative overflow-hidden bg-bg">
+  <div
+    aria-hidden="true"
+    class="pointer-events-none absolute inset-0 opacity-40"
+    style="background-image:linear-gradient(var(--line) 1px,transparent 1px),linear-gradient(90deg,var(--line) 1px,transparent 1px);background-size:28px 28px;-webkit-mask-image:radial-gradient(ellipse 70% 90% at 85% 30%,black,transparent 70%);mask-image:radial-gradient(ellipse 70% 90% at 85% 30%,black,transparent 70%)"
+  >
+  </div>
+
+  <div
+    class="section-shell relative flex flex-col items-start gap-[var(--space-6)] py-[var(--space-10)] md:py-[var(--space-12)]"
+  >
+    <span
+      data-reveal
+      class="text-overline inline-block rounded-full border-2 border-green px-[var(--space-3)] py-[var(--space-1)] text-green"
+      >Для малого бизнеса</span
+    >
+    <h1 data-reveal class="text-h1 max-w-[880px] text-balance text-ink">
+      Наведём порядок в вашем бизнесе — и сделаем систему, где всё под контролем
+    </h1>
+    <p data-reveal class="text-lead max-w-[620px] text-pretty text-muted">
+      Без сложных слов и «внедрений ради внедрений». Сначала разберёмся, где
+      именно у вас теряются клиенты и деньги, — потом решим, нужна ли вообще
+      программа.
+    </p>
+    <div
+      data-reveal
+      class="mt-[var(--space-1)] flex flex-wrap items-center gap-[var(--space-4)]"
+    >
+      <a
+        href="#form"
+        class="text-button inline-flex h-[var(--control-height)] items-center rounded-xl border-2 border-transparent bg-green px-6 text-belyi no-underline transition-colors duration-[var(--motion-button)] hover:border-ink hover:bg-transparent hover:text-ink"
+      >
+        Записаться на диагностику
+      </a>
+      <span class="text-mono-caption text-muted">1–2 недели · 40–80 тыс ₽</span>
+    </div>
+  </div>
+</section>
