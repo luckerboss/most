@@ -9,6 +9,8 @@
  * Поля (план §4.1, business): имя, телефон/Telegram, ниша (select), «что болит».
  * honeypot-поле (company) заложено скрытым — задел на антиспам фазы 4, без логики.
  */
+import { CONTACTS } from '@/consts';
+
 const fieldBase =
   "h-[var(--control-height)] w-full rounded-lg border-2 border-line bg-surface px-[var(--space-4)] text-body text-ink transition-colors duration-[var(--motion-card)] focus:border-green";
 
@@ -40,14 +42,14 @@ const niches = [
       >
         <span class="text-mono-caption text-muted">быстрее — напрямую:</span>
         <a
-          href="https://t.me/el_castinho"
+          href={CONTACTS.telegram.url}
           class="text-button text-green no-underline hover:text-green-hover"
-          >Telegram · @el_castinho</a
+          >Telegram · {CONTACTS.telegram.handle}</a
         >
         <a
-          href="tel:+79229731706"
+          href={CONTACTS.phone.href}
           class="text-button text-ink no-underline hover:text-muted"
-          >+7 922 973-17-06</a
+          >{CONTACTS.phone.display}</a
         >
       </div>
     </div>
