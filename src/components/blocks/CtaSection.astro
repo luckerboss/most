@@ -6,7 +6,7 @@
  *
  * @type {{
  *   title?: string,
- *   text?: string,
+ *   text?: string,   // передать null/"" чтобы скрыть подзаголовок (напр. CTA /about)
  *   note?: string,
  *   primary?: { label: string, href: string },
  *   secondary?: { label: string, href: string },
@@ -26,7 +26,7 @@ const {
     class="section-shell flex flex-col items-start gap-[var(--space-6)] py-[var(--space-10)] md:py-[var(--space-12)]"
   >
     <h2 data-reveal class="text-h2 max-w-[720px] text-belyi">{title}</h2>
-    <p data-reveal class="text-lead max-w-[640px] text-text-inverse">{text}</p>
+    {text && <p data-reveal class="text-lead max-w-[640px] text-text-inverse">{text}</p>}
     <div
       data-reveal
       class="flex flex-wrap items-center gap-[14px]"

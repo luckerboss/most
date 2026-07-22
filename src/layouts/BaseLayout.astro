@@ -13,6 +13,7 @@ import Footer from "@/components/blocks/Footer.astro";
  * шапка и футер.
  */
 const { title = "Мост", description = "" } = Astro.props;
+const ogImage = new URL("/og-image.png", Astro.url).toString();
 ---
 
 <html lang="ru">
@@ -73,8 +74,16 @@ const { title = "Мост", description = "" } = Astro.props;
     <meta name="generator" content={Astro.generator} />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="icon" href="/favicon.ico" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/site.webmanifest" />
+    <meta name="theme-color" content="rgb(26, 31, 41)" />
     {description && <meta name="description" content={description} />}
     <title>{title}</title>
+    <meta property="og:title" content={title} />
+    {description && <meta property="og:description" content={description} />}
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:type" content="website" />
+    <meta name="twitter:card" content="summary_large_image" />
   </head>
   <body class="flex min-h-[100vh] flex-col">
     <Header />

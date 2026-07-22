@@ -1,5 +1,6 @@
 ---
 import ThemeToggle from "@/components/blocks/ThemeToggle.jsx";
+import Logo from "@/components/Logo.astro";
 ---
 
 <header
@@ -8,7 +9,13 @@ import ThemeToggle from "@/components/blocks/ThemeToggle.jsx";
   <div
     class="section-shell flex h-[var(--header-height)] items-center justify-between"
   >
-    <a href="/" class="font-heading text-xl font-bold text-ink">Мост</a>
+    <a
+      href="/"
+      class="flex items-center gap-2 font-heading text-xl font-bold text-ink"
+    >
+      <Logo size={32} />
+      Мост
+    </a>
 
     <div class="flex items-center gap-3">
       <!-- Навигация заполняется в фазе 3 -->

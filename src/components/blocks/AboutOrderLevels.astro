@@ -1,0 +1,49 @@
+---
+/**
+ * «Что значит «наводим порядок»» — два уровня, на которых мы работаем.
+ * Цвета уровней — по макету: уровень 1 (компания) — malahit, уровень 2
+ * (система) — kobalt. Это не сегментное деление страницы, а смысловая
+ * маркировка двух карточек, как в about.dc.html.
+ */
+const levels = [
+  {
+    eyebrow: "уровень 1 · компания",
+    accent: "text-green",
+    title: "Порядок в бизнес-процессах",
+    text: "Куда приходят заявки, кто за что отвечает, где теряются деньги. Разбираем «как есть», проектируем «как надо» — иногда этого достаточно и без всякой программы.",
+  },
+  {
+    eyebrow: "уровень 2 · система",
+    accent: "text-accent",
+    title: "Порядок внутри системы",
+    text: "Требования, SRS, схемы данных, критерии приёмки. Чтобы разработка строила по документу, а не по догадкам, — и чтобы система пережила смену любой команды.",
+  },
+];
+---
+
+<section class="border-t-2 border-line bg-surface">
+  <div class="section-shell py-[var(--space-10)] md:py-[var(--space-12)]">
+    <h2 data-reveal class="text-h2 max-w-[640px] text-ink">
+      Что значит «наводим порядок»
+    </h2>
+
+    <div
+      class="mt-[var(--space-8)] grid gap-[var(--space-6)]"
+      style="grid-template-columns:repeat(auto-fit,minmax(min(380px,100%),1fr))"
+    >
+      {
+        levels.map((l, i) => (
+          <div
+            data-reveal
+            data-reveal-delay={i === 1 ? 100 : undefined}
+            class="flex flex-col gap-[var(--space-3)] rounded-2xl border-2 border-line bg-bg p-[var(--space-7)]"
+          >
+            <span class:list={["text-overline", l.accent]}>{l.eyebrow}</span>
+            <span class="text-h3 text-ink">{l.title}</span>
+            <p class="text-body text-pretty text-muted">{l.text}</p>
+          </div>
+        ))
+      }
+    </div>
+  </div>
+</section>

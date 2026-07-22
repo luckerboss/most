@@ -1,0 +1,47 @@
+---
+/**
+ * Hero страницы /about. Общая страница — акцент базовый (kobalt), без
+ * сегментного разделения. Мм-сетка на токене --line (как на других hero),
+ * замаскирована радиальным градиентом в правый верхний угол — по макету.
+ * Фото — placeholder (TODO: заменить реальным снимком команды).
+ */
+---
+
+<section class="relative overflow-hidden bg-bg">
+  <div
+    aria-hidden="true"
+    class="pointer-events-none absolute inset-0 opacity-40"
+    style="background-image:linear-gradient(var(--line) 1px,transparent 1px),linear-gradient(90deg,var(--line) 1px,transparent 1px);background-size:28px 28px;-webkit-mask-image:radial-gradient(ellipse 70% 90% at 80% 20%,black,transparent 70%);mask-image:radial-gradient(ellipse 70% 90% at 80% 20%,black,transparent 70%)"
+  >
+  </div>
+
+  <div
+    class="section-shell relative grid items-center gap-[var(--space-8)] py-[var(--space-10)] md:gap-[var(--space-10)] md:py-[var(--space-12)]"
+    style="grid-template-columns:repeat(auto-fit,minmax(min(420px,100%),1fr))"
+  >
+    <div data-reveal class="flex flex-col items-start gap-[var(--space-5)]">
+      <span class="text-overline text-muted">Кто мы</span>
+      <h1 class="text-h1 text-pretty text-ink">
+        Системные аналитики, которые наводят порядок
+      </h1>
+      <p class="text-lead max-w-[560px] text-pretty text-muted">
+        За плечами — годы в коммерческой разработке: требования, спецификации,
+        запуски. Порядок наводим на двух уровнях: в процессах компании и
+        внутри самой системы.
+      </p>
+    </div>
+
+    {/* TODO: заменить на реальное фото команды */}
+    <div
+      data-reveal
+      data-reveal-delay="120"
+      class="relative flex min-h-[320px] items-center justify-center overflow-hidden rounded-2xl border-2 border-line"
+      style="background:repeating-linear-gradient(-45deg,var(--surface),var(--surface) 12px,var(--hover) 12px,var(--hover) 24px)"
+    >
+      <span
+        class="text-mono-caption rounded-md border-2 border-dashed border-line2 bg-surface px-[var(--space-4)] py-[10px] text-muted"
+        >фото команды</span
+      >
+    </div>
+  </div>
+</section>

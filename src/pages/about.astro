@@ -1,0 +1,23 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import AboutHero from "@/components/blocks/AboutHero.astro";
+import AboutOrderLevels from "@/components/blocks/AboutOrderLevels.astro";
+import AboutPrinciples from "@/components/blocks/AboutPrinciples.astro";
+import AboutFormat from "@/components/blocks/AboutFormat.astro";
+import CtaSection from "@/components/blocks/CtaSection.astro";
+---
+
+<BaseLayout
+  title="О нас — Мост"
+  description="Системные аналитики, которые наводят порядок: в бизнес-процессах компании и внутри самой системы. Диагностика, требования, SRS — без лишних терминов."
+>
+  <AboutHero />
+  <AboutOrderLevels />
+  <AboutPrinciples />
+  <AboutFormat />
+  <CtaSection
+    title="Проще всего познакомиться на деле"
+    text={null}
+    note={null}
+  />
+</BaseLayout>

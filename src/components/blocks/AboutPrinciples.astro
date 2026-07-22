@@ -1,0 +1,57 @@
+---
+/**
+ * «Принципы работы» — четыре пронумерованные карточки. Структура и порядок
+ * элементов — как в ServiceLadder (существующий паттерн нумерованных карточек).
+ */
+const principles = [
+  {
+    n: "01",
+    title: "Сначала диагноз, потом лечение",
+    text: "Не продаём разработку тем, кому она не нужна. Диагностика может закончиться выводом «программа не нужна» — и это хороший результат.",
+    delay: 0,
+  },
+  {
+    n: "02",
+    title: "Не привязываем к себе",
+    text: "Каждый документ пишем так, чтобы по нему могла работать любая команда. Уйти от нас легко — поэтому от нас не уходят из безысходности.",
+    delay: 60,
+  },
+  {
+    n: "03",
+    title: "Говорим на языке клиента",
+    text: "С владельцем салона — про записи и выручку, без терминов. С продуктовой командой — про SRS, use case и критерии приёмки.",
+    delay: 120,
+  },
+  {
+    n: "04",
+    title: "Всё — на бумаге",
+    text: "Договорённости, границы работ, критерии готовности. Смета фиксируется до старта и не расползается по ходу.",
+    delay: 180,
+  },
+];
+---
+
+<section class="bg-bg">
+  <div class="section-shell py-[var(--space-10)] md:py-[var(--space-12)]">
+    <h2 data-reveal class="text-h2 text-ink">Принципы работы</h2>
+
+    <div
+      class="mt-[var(--space-8)] grid gap-[var(--space-5)]"
+      style="grid-template-columns:repeat(auto-fit,minmax(min(300px,100%),1fr))"
+    >
+      {
+        principles.map((p) => (
+          <div
+            data-reveal
+            data-reveal-delay={p.delay}
+            class="flex flex-col gap-[var(--space-2)] rounded-2xl border-2 border-line bg-surface p-[var(--space-6)]"
+          >
+            <span class="text-mono-caption text-accent">{p.n}</span>
+            <span class="text-h4 text-ink">{p.title}</span>
+            <span class="text-body-s text-pretty text-muted">{p.text}</span>
+          </div>
+        ))
+      }
+    </div>
+  </div>
+</section>

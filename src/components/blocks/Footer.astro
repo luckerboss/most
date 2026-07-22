@@ -1,4 +1,6 @@
 ---
+import Logo from "@/components/Logo.astro";
+
 const year = new Date().getFullYear();
 ---
 
@@ -6,7 +8,10 @@ const year = new Date().getFullYear();
   <div
     class="section-shell flex flex-wrap items-center justify-between gap-3 py-6 text-sm text-muted"
   >
-    <p>© {year} «Мост»</p>
+    <p class="flex items-center gap-2">
+      <Logo size={24} />
+      © {year} «Мост»
+    </p>
     <a
       href="/privacy"
       class="text-muted underline-offset-4 hover:text-ink hover:underline"

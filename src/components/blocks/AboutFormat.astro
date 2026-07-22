@@ -1,0 +1,38 @@
+---
+/**
+ * «Формат работы» — текст слева, карточка контактов справа. Контакты и текст —
+ * дословно из about.dc.html.
+ */
+---
+
+<section class="border-t-2 border-line bg-surface">
+  <div
+    class="section-shell flex flex-wrap items-start gap-[var(--space-7)] py-[var(--space-10)] md:gap-[var(--space-10)] md:py-[var(--space-12)]"
+  >
+    <div data-reveal class="flex min-w-[min(380px,100%)] flex-1 flex-col gap-[var(--space-4)]">
+      <h2 class="text-h2 text-ink">Формат работы</h2>
+      <p class="text-body-article max-w-[560px] text-pretty text-muted">
+        База — Киров, работаем со всей Россией. Интервью и сессии — по
+        видеосвязи, артефакты — в общих документах, договор и акты — в
+        электронном документообороте.
+      </p>
+    </div>
+
+    <div
+      data-reveal
+      data-reveal-delay="100"
+      class="flex min-w-[min(300px,100%)] flex-col gap-[var(--space-2)] rounded-2xl border-2 border-line bg-bg p-[var(--space-7)]"
+    >
+      <span class="text-overline text-muted">Контакты</span>
+      <a
+        href="https://t.me/el_castinho"
+        class="text-button text-accent no-underline hover:text-accent-hover"
+        >Telegram · @el_castinho</a
+      >
+      <a href="tel:+79229731706" class="text-button text-ink no-underline"
+        >+7 922 973-17-06</a
+      >
+      <span class="text-mono-caption text-muted">отвечаем в течение рабочего дня</span>
+    </div>
+  </div>
+</section>
