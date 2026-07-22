@@ -6,16 +6,26 @@
  * Полоски сверху показывают, какая часть пути пройдена к этой ступени: первые
  * `filled` из 4 — акцентом, остальные — линией.
  *
+ * `recurring` — вариант постоянного формата (не ступени): полоски и номер
+ * ступени скрыты, вместо «ступень N» — кикер «постоянный формат». Остальная
+ * анатомия карточки (что входит / границы / самоценность) без изменений.
+ *
  * @type {{
- *   n: string,               // «1 / 4» — номер ступени
- *   filled: number,          // сколько из 4 полосок закрашено (1..4)
- *   time: string,            // срок, напр. «1–2 недели»
- *   name: string,            // название ступени
+ *   n?: string,              // «1 / 4» — номер ступени (не нужен для recurring)
+ *   filled?: number,         // сколько из 4 полосок закрашено (1..4)
+ *   time: string,            // срок, напр. «1–2 недели» или «ежемесячно»
+ *   name: string,            // название ступени / формата
  *   price: string,           // цена-вилка или условие
  *   includes?: string[],     // блок «что входит»
  *   limits?: string,         // блок «границы» — чего НЕ делаем
  *   own?: string,            // почему ступень самоценна
+ *   recurring?: boolean,     // постоянный формат вместо ступени лестницы
  *   delay?: number,          // задержка reveal-анимации, мс
+ *   subgrid?: boolean,       // выровнять зоны по CSS subgrid родителя (только
+ *                            // когда карточка стоит в ряду грид-контейнера с
+ *                            // grid-template-rows: repeat(8, auto) — см.
+ *                            // ServiceLadderFull). По умолчанию false — обычная
+ *                            // независимая flex-колонка (главная, recurring-карточка).
  * }}
  */
 const {
@@ -27,41 +37,59 @@ const {
   includes = [],
   limits,
   own,
+  recurring = false,
   delay,
+  subgrid = false,
 } = Astro.props;
 
 const bars = [1, 2, 3, 4];
+
+/**
+ * grid-row зоны карточки — только в режиме subgrid (иначе зоны идут обычным
+ * flex-потоком и позиционирование не нужно). Нумерация зон фиксирована (1..8),
+ * так что отсутствие зоны (напр. полосок у recurring) не сдвигает следующие.
+ */
+/** @param {number} i */
+const row = (i) => (subgrid ? `grid-row:${i}` : undefined);
 ---
 
 <div
   data-reveal
   data-reveal-delay={delay}
-  class="flex flex-col gap-[var(--space-4)] rounded-2xl border-2 border-line bg-bg p-[var(--space-6)] transition-[border-color,transform,box-shadow] duration-[var(--motion-card)] hover:-translate-y-[3px] hover:border-accent hover:shadow-[0_12px_28px_var(--shadow-card)]"
+  class:list={[
+    "rounded-2xl border-2 border-line bg-bg p-[var(--space-6)] transition-[border-color,transform,box-shadow] duration-[var(--motion-card)] hover:-translate-y-[3px] hover:border-accent hover:shadow-[0_12px_28px_var(--shadow-card)]",
+    subgrid ? "grid" : "flex flex-col gap-[var(--space-4)]",
+  ]}
+  style={subgrid ? "grid-template-rows:subgrid;grid-row:span 8" : undefined}
 >
-  <div class="flex items-center gap-[var(--space-2)]">
-    {
-      bars.map((i) => (
-        <span
-          class:list={[
-            "h-1.5 flex-1 rounded-full",
-            i <= filled ? "bg-accent" : "bg-line",
-          ]}
-        />
-      ))
-    }
-  </div>
+  {
+    !recurring && (
+      <div class="flex items-center gap-[var(--space-2)]" style={row(1)}>
+        {bars.map((i) => (
+          <span
+            class:list={[
+              "h-1.5 flex-1 rounded-full",
+              i <= filled ? "bg-accent" : "bg-line",
+            ]}
+          />
+        ))}
+      </div>
+    )
+  }
 
-  <div class="flex items-baseline justify-between gap-[var(--space-2)]">
-    <span class="text-mono-caption text-accent">ступень {n}</span>
+  <div class="flex items-baseline justify-between gap-[var(--space-2)]" style={row(2)}>
+    <span class="text-mono-caption text-accent">
+      {recurring ? "постоянный формат" : `ступень ${n}`}
+    </span>
     <span class="text-mono-caption text-muted">{time}</span>
   </div>
 
-  <span class="text-h3 text-ink">{name}</span>
-  <span class="text-h4 text-accent">{price}</span>
+  <span class="text-h3 text-ink" style={row(3)}>{name}</span>
+  <span class="text-h4 text-accent" style={row(4)}>{price}</span>
 
   {
     includes.length > 0 && (
-      <div class="flex flex-col gap-[var(--space-2)]">
+      <div class="flex flex-col gap-[var(--space-2)]" style={row(5)}>
         <span class="text-overline text-muted">Что входит</span>
         {includes.map((item) => (
           <span class="text-body-s flex items-start gap-[var(--space-2)] text-ink">
@@ -77,7 +105,23 @@ const bars = [1, 2, 3, 4];
   }
 
   {
-    limits && (
+    limits && subgrid && (
+      <>
+        <div
+          aria-hidden="true"
+          class="border-t-2 border-dashed border-line2"
+          style={row(6)}
+        />
+        <div class="flex flex-col gap-[var(--space-2)]" style={row(7)}>
+          <span class="text-overline text-muted">Границы</span>
+          <span class="text-body-s text-muted">{limits}</span>
+        </div>
+      </>
+    )
+  }
+
+  {
+    limits && !subgrid && (
       <div class="flex flex-col gap-[var(--space-2)] border-t-2 border-dashed border-line2 pt-[var(--space-4)]">
         <span class="text-overline text-muted">Границы</span>
         <span class="text-body-s text-muted">{limits}</span>
@@ -87,7 +131,13 @@ const bars = [1, 2, 3, 4];
 
   {
     own && (
-      <div class="mt-auto rounded-lg bg-green-tint px-[var(--space-4)] py-[var(--space-3)]">
+      <div
+        class:list={[
+          "rounded-lg bg-green-tint px-[var(--space-4)] py-[var(--space-3)]",
+          !subgrid && "mt-auto",
+        ]}
+        style={row(8)}
+      >
         <span class="text-caption text-green-hover">{own}</span>
       </div>
     )

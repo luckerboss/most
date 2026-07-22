@@ -73,15 +73,38 @@ const steps = [
     own: "Самоценна: подписку можно остановить в любой месяц — система и документы остаются у вас.",
   },
 ];
+
+/**
+ * Постоянный формат «сбоку» от лестницы — не пятая ступень, а recurring-работа.
+ * Отличается от ступени 3.5 «Поддержка» (техническая): здесь аналитическая
+ * работа над продуктом. Формулировка синхронизирована с /it (ItServices, 04
+ * «Аналитик в команде»). Цена — «по запросу», без числа (механику подписки
+ * считаем индивидуально).
+ */
+const analyst = {
+  recurring: true,
+  time: "ежемесячно",
+  name: "Аналитик в команде",
+  price: "по запросу",
+  includes: [
+    "Ведём и приоритизируем бэклог",
+    "Готовим story к спринтам с критериями приёмки",
+    "Держим SRS и документацию актуальными",
+    "Часть недели — ваш аналитик",
+  ],
+  limits:
+    "Это аналитическая работа над продуктом, а не техническая поддержка. Объём согласуем помесячно, крупные инициативы оцениваем отдельно.",
+  own: "Гибко: формат можно остановить в любой месяц — бэклог и документы остаются у вас.",
+};
 ---
 
 <section class="border-t-2 border-line bg-surface">
   <div class="section-shell py-[var(--space-10)] md:py-[var(--space-11)]">
     <div
-      class="grid items-stretch gap-[var(--space-5)]"
-      style="grid-template-columns:repeat(auto-fit,minmax(min(290px,100%),1fr))"
+      class="grid items-stretch gap-x-[var(--space-5)] gap-y-[var(--space-4)]"
+      style="grid-template-columns:repeat(auto-fit,minmax(min(290px,100%),1fr));grid-template-rows:repeat(8,auto)"
     >
-      {steps.map((s) => <ServiceStepCard {...s} />)}
+      {steps.map((s) => <ServiceStepCard {...s} subgrid />)}
     </div>
 
     <p data-reveal class="text-body-s mt-[var(--space-7)] max-w-[820px] text-muted">
@@ -89,5 +112,23 @@ const steps = [
       ходу. Полоски сверху карточки показывают, какая часть пути пройдена к этой
       ступени.
     </p>
+
+    <div
+      class="mt-[var(--space-11)] border-t-2 border-line pt-[var(--space-10)]"
+    >
+      <div data-reveal class="flex max-w-[640px] flex-col gap-[var(--space-3)]">
+        <span class="text-overline text-muted">Работаем вдолгую</span>
+        <h2 class="text-h2 text-ink">Постоянный формат — рядом с лестницей</h2>
+        <p class="text-body text-muted text-pretty">
+          Ступени можно пройти и остановиться. А можно оставить аналитика в
+          команде на постоянной основе — отдельно от лестницы: он ведёт продукт
+          вдолгую, а не «сдаёт этап».
+        </p>
+      </div>
+
+      <div class="mt-[var(--space-7)] max-w-[460px]">
+        <ServiceStepCard {...analyst} delay={80} />
+      </div>
+    </div>
   </div>
 </section>
