@@ -16,7 +16,12 @@ export default defineConfig({
     plugins: [tailwindcss()]
   },
   server: {
-    host: true, // слушать все интерфейсы, как это делает next
+    host: true,
+    allowedHosts: [
+      '.ngrok-free.app',
+      '.ngrok-free.dev',
+      '.ngrok.app',
+      '.ngrok.io'
+    ]
   }
 });
-
