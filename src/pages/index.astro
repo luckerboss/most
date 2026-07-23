@@ -6,40 +6,9 @@ import ServiceLadder from "@/components/blocks/ServiceLadder.astro";
 import FounderIntro from "@/components/blocks/FounderIntro.astro";
 import LatestPosts from "@/components/blocks/LatestPosts.astro";
 import CtaSection from "@/components/blocks/CtaSection.astro";
+import { getPublishedPosts, toCardProps } from "@/lib/blog.js";
 
-/**
- * Статические карточки-заглушки для блока статей. На фазе 5 заменяются данными
- * из content collections (тот же контракт: title/excerpt/href/date/minutes/segment).
- */
-const latestPosts = [
-  {
-    title: "Записи в тетрадке: когда салону пора в систему",
-    excerpt:
-      "Разбираем на примере студии, где теряются заявки и как понять, что ручной учёт уже стоит денег.",
-    href: "/blog",
-    date: "12.06.2026",
-    minutes: 6,
-    segment: "business",
-  },
-  {
-    title: "Бэклог в одну строку: как собрать требования, по которым строят",
-    excerpt:
-      "Что показать инвестору и команде, чтобы фичи перестали переделываться по кругу.",
-    href: "/blog",
-    date: "28.05.2026",
-    minutes: 8,
-    segment: "it",
-  },
-  {
-    title: "SRS без боли: критерии приёмки, понятные и бизнесу, и разработчику",
-    excerpt:
-      "Как один документ убирает споры «а мы договаривались иначе» на сдаче проекта.",
-    href: "/blog",
-    date: "14.05.2026",
-    minutes: 7,
-    segment: "it",
-  },
-];
+const latestPosts = (await getPublishedPosts()).slice(0, 3).map(toCardProps);
 ---
 
 <BaseLayout
@@ -50,6 +19,6 @@ const latestPosts = [
   <SegmentFork />
   <ServiceLadder />
   <FounderIntro />
-  <LatestPosts posts={latestPosts} />
+  {latestPosts.length > 0 && <LatestPosts posts={latestPosts} />}
   <CtaSection />
 </BaseLayout>
