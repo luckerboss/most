@@ -1,0 +1,122 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import PostCard from "@/components/blocks/PostCard.astro";
+import { getPublishedPosts, toCardProps } from "@/lib/blog.js";
+
+const posts = await getPublishedPosts();
+const cards = posts.map(toCardProps);
+
+/** Кнопки фильтра по сегменту (значения — как в схеме коллекции blog). */
+const FILTERS = [
+  { value: "all", label: "Все статьи" },
+  { value: "business", label: "Для бизнеса" },
+  { value: "it", label: "Для IT" },
+];
+---
+
+<BaseLayout
+  title="Блог — Мост"
+  description="Разборы для владельцев малого бизнеса и IT-команд: заявки и CRM, требования, SRS, discovery."
+>
+  <section class="bg-bg">
+    <div
+      class="section-shell flex flex-col gap-[var(--space-5)] py-[var(--space-10)] md:py-[var(--space-11)]"
+    >
+      <span data-reveal class="text-overline text-muted">Блог</span>
+      <h1 data-reveal class="text-h1 max-w-[760px] text-ink text-pretty">
+        Разбираем хаос на примерах
+      </h1>
+      <p data-reveal class="text-lead max-w-[620px] text-muted text-pretty">
+        Про заявки, тетрадки и CRM — для владельцев. Про требования, SRS и
+        discovery — для команд.
+      </p>
+
+      <div
+        data-reveal
+        id="blog-filters"
+        role="group"
+        aria-label="Фильтр статей"
+        class="flex flex-wrap gap-[var(--space-3)] pt-[var(--space-2)]"
+      >
+        {
+          FILTERS.map((f) => (
+            <button
+              type="button"
+              data-filter={f.value}
+              aria-pressed={f.value === "all" ? "true" : "false"}
+              class:list={[
+                "text-button-compact inline-flex items-center rounded-full border-2 px-[var(--space-4)] py-[var(--space-3)] transition-colors duration-[var(--motion-button)] hover:border-accent",
+                f.value === "all"
+                  ? "border-accent bg-accent text-belyi"
+                  : "border-line bg-surface text-ink",
+              ]}
+            >
+              {f.label}
+            </button>
+          ))
+        }
+      </div>
+    </div>
+  </section>
+
+  <section class="border-t-2 border-line bg-surface">
+    <div class="section-shell py-[var(--space-9)] md:py-[var(--space-10)]">
+      {
+        cards.length > 0 ? (
+          <div
+            id="blog-posts"
+            class="grid gap-[var(--space-6)]"
+            style="grid-template-columns:repeat(auto-fill,minmax(min(340px,100%),1fr))"
+          >
+            {cards.map((post) => (
+              <PostCard {...post} />
+            ))}
+          </div>
+        ) : (
+          <p class="text-body text-muted">Скоро здесь появятся статьи.</p>
+        )
+      }
+    </div>
+  </section>
+</BaseLayout>
+
+<script>
+  const group = document.getElementById("blog-filters");
+  const grid = document.getElementById("blog-posts");
+
+  if (group && grid) {
+    const buttons = Array.from(
+      group.querySelectorAll("button[data-filter]"),
+    );
+    const cards = Array.from(grid.querySelectorAll("[data-segment]"));
+
+    /** @param {boolean} active */
+    function setActive(button, active) {
+      button.setAttribute("aria-pressed", active ? "true" : "false");
+      button.classList.toggle("border-accent", active);
+      button.classList.toggle("bg-accent", active);
+      button.classList.toggle("text-belyi", active);
+      button.classList.toggle("border-line", !active);
+      button.classList.toggle("bg-surface", !active);
+      button.classList.toggle("text-ink", !active);
+    }
+
+    /** @param {string} value */
+    function applyFilter(value) {
+      cards.forEach((card) => {
+        const seg = card.getAttribute("data-segment");
+        const visible = value === "all" || seg === value || seg === "common";
+        card.hidden = !visible;
+      });
+      buttons.forEach((btn) =>
+        setActive(btn, btn.getAttribute("data-filter") === value),
+      );
+    }
+
+    buttons.forEach((btn) => {
+      btn.addEventListener("click", () =>
+        applyFilter(btn.getAttribute("data-filter")),
+      );
+    });
+  }
+</script>

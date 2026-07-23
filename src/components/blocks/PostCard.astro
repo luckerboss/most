@@ -1,0 +1,45 @@
+---
+/**
+ * Карточка статьи блога (индекс /blog). Пропсы — контракт toCardProps()
+ * (src/lib/blog.js): { title, excerpt, href, date, minutes, segment }.
+ * Корневой элемент несёт data-segment — по нему работает фильтр сегментов
+ * на странице /blog (см. <script> в src/pages/blog/index.astro).
+ *
+ * @type {{
+ *   title: string,
+ *   excerpt: string,
+ *   href: string,
+ *   date: string,
+ *   minutes: number,
+ *   segment: "business" | "it" | "common",
+ * }}
+ */
+const { title, excerpt, href, date, minutes, segment } = Astro.props;
+
+/** Оформление бейджа сегмента: подпись + цвет текста/подложки (§3 токены). */
+const SEGMENTS = {
+  it: { label: "Продукт и команда", badge: "text-accent bg-accent-tint" },
+  business: { label: "Малый бизнес", badge: "text-green bg-green-tint" },
+  common: { label: "Всем", badge: "text-muted bg-hover" },
+};
+const seg = SEGMENTS[segment] ?? SEGMENTS.common;
+---
+
+<a
+  href={href}
+  data-segment={segment}
+  data-reveal
+  class="flex flex-col gap-[var(--space-4)] rounded-2xl border-2 border-line bg-bg p-[var(--space-6)] text-ink no-underline transition duration-[var(--motion-card)] hover:-translate-y-[3px] hover:border-line2 hover:shadow-[0_12px_28px_var(--shadow-card)]"
+>
+  <span
+    class={`text-caption self-start rounded-full px-[10px] py-[5px] font-medium tracking-[0.4px] ${seg.badge}`}
+  >
+    {seg.label}
+  </span>
+  <span class="text-h4 text-ink text-pretty">{title}</span>
+  <span class="text-body-s text-muted text-pretty">{excerpt}</span>
+  <span class="text-mono-caption mt-auto flex items-center justify-between gap-[var(--space-3)] text-muted">
+    <span>{date} · {minutes} мин</span>
+    <span aria-hidden="true" class="text-accent">→</span>
+  </span>
+</a>
