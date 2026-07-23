@@ -3,10 +3,6 @@ import ThemeToggle from "@/components/blocks/ThemeToggle.jsx";
 import MobileNav from "@/components/blocks/MobileNav.jsx";
 import Logo from "@/components/Logo.astro";
 
-/**
- * Единый источник пунктов навигации — переиспользуется десктопной <nav>
- * и мобильным островком MobileNav (design/light/index.dc.html, SiteHeader).
- */
 const navLinks = [
   { label: "Для бизнеса", href: "/business" },
   { label: "Для IT", href: "/it" },
@@ -14,6 +10,7 @@ const navLinks = [
   { label: "Блог", href: "/blog" },
   { label: "О нас", href: "/about" },
 ];
+
 
 const ctaHref = "/business#form";
 const ctaLabel = "Записаться на диагностику";
@@ -58,16 +55,16 @@ const isActive = (href) =>
           ))
         }
       </nav>
-      <a
-        href={ctaHref}
-        class="text-button-compact ml-[var(--space-2)] inline-flex h-[var(--control-height-compact)] items-center whitespace-nowrap rounded-lg border-2 border-transparent bg-accent px-5 text-belyi no-underline transition-colors duration-[var(--motion-button)] hover:border-ink hover:bg-transparent hover:text-ink"
-      >
-        {ctaLabel}
-      </a>
     </div>
 
     <div class="flex items-center gap-3">
       <ThemeToggle client:load />
+      <a
+        href={ctaHref}
+        class="text-button-compact hidden h-[var(--control-height-compact)] items-center whitespace-nowrap rounded-lg border-2 border-transparent bg-accent px-5 text-belyi no-underline transition-colors duration-[var(--motion-button)] hover:border-ink hover:bg-transparent hover:text-ink burger:inline-flex"
+      >
+        {ctaLabel}
+      </a>
       <MobileNav
         client:load
         links={navLinks}
