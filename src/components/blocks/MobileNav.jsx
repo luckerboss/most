@@ -19,11 +19,12 @@ import { cn } from "@/lib/utils";
  *   links: { label: string, href: string }[],
  *   ctaHref: string,
  *   ctaLabel: string,
+ *   ctaSegment: "business" | "it",
  *   pathname: string,
  *   className?: string,
  * }} props
  */
-export default function MobileNav({ links, ctaHref, ctaLabel, pathname, className }) {
+export default function MobileNav({ links, ctaHref, ctaLabel, ctaSegment, pathname, className }) {
   const isActive = (href) =>
     href === "/blog" ? pathname === "/blog" || pathname.startsWith("/blog/") : pathname === href;
 
@@ -56,6 +57,7 @@ export default function MobileNav({ links, ctaHref, ctaLabel, pathname, classNam
           <SheetClose asChild>
             <a
               href={ctaHref}
+              data-lead-modal={ctaSegment}
               className="text-button mt-[var(--space-5)] flex h-[var(--control-height)] items-center justify-center rounded-xl border-2 border-transparent bg-accent px-6 text-belyi no-underline transition-colors duration-[var(--motion-button)] hover:border-ink hover:bg-transparent hover:text-ink"
             >
               {ctaLabel}

@@ -4,6 +4,7 @@
  */
 import { mkdir, appendFile } from 'node:fs/promises';
 import path from 'node:path';
+import { isValidName, validateContact } from '@/lib/contact';
 
 export const prerender = false;
 
@@ -14,7 +15,7 @@ const RATE_LIMIT_MAX = 3;
 const rateLimitStore = new Map();
 
 const LIMITS = {
-  name: 100,
+  name: 60,
   contact: 200,
   niche: 60,
   pain: 1000,
@@ -61,10 +62,20 @@ function validate(body) {
   if (!segment) fields.segment = 'required';
 
   const name = typeof body.name === 'string' ? body.name.trim() : '';
-  if (!name || name.length > LIMITS.name) fields.name = 'required';
+  if (!name) {
+    fields.name = 'required';
+  } else if (!isValidName(name)) {
+    fields.name = 'invalid';
+  }
 
-  const contact = typeof body.contact === 'string' ? body.contact.trim() : '';
-  if (!contact || contact.length > LIMITS.contact) fields.contact = 'required';
+  const rawContact = typeof body.contact === 'string' ? body.contact : '';
+  const contactCheck =
+    segment && rawContact.length <= LIMITS.contact ? validateContact(rawContact, segment) : { ok: false };
+  if (!rawContact.trim()) {
+    fields.contact = 'required';
+  } else if (!contactCheck.ok) {
+    fields.contact = 'invalid';
+  }
 
   if (body.agree !== true) fields.agree = 'required';
 
@@ -73,7 +84,7 @@ function validate(body) {
   }
 
   const page = truncate(body.page, LIMITS.page);
-  const lead = { segment, name, contact, page };
+  const lead = { segment, name, contact: contactCheck.normalized, page };
 
   if (segment === 'business') {
     const niche = truncate(body.niche, LIMITS.niche);

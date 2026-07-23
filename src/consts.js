@@ -8,3 +8,6 @@ export const CONTACTS = {
     href: 'tel:+79229731706',
   },
 };
+
+/** Счётчик Яндекс.Метрики ещё не подключён на сайте — вписать ID при установке тега. */
+export const YM_COUNTER_ID = null;

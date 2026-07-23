@@ -11,6 +11,7 @@ const routes = [
       "Почти всегда — с диагностики: она покажет, нужна ли вам вообще система",
     cta: "Записаться на диагностику",
     href: "/business#form",
+    segment: "business",
     accent: "green",
     delay: undefined,
   },
@@ -20,6 +21,7 @@ const routes = [
       "Пришлите ТЗ или бэклог — бесплатное ревью подскажет, какая ступень ваша",
     cta: "Получить ревью ТЗ",
     href: "/it#form",
+    segment: "it",
     accent: "accent",
     delay: 100,
   },
@@ -38,6 +40,7 @@ const routes = [
         routes.map((r) => (
           <a
             href={r.href}
+            data-lead-modal={r.segment}
             data-reveal
             data-reveal-delay={r.delay}
             class:list={[

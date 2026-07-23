@@ -61,6 +61,7 @@ const isActive = (href) =>
       <ThemeToggle client:load />
       <a
         href={ctaHref}
+        data-lead-modal="business"
         class="text-button-compact hidden h-[var(--control-height-compact)] items-center whitespace-nowrap rounded-lg border-2 border-transparent bg-accent px-5 text-belyi no-underline transition-colors duration-[var(--motion-button)] hover:border-ink hover:bg-transparent hover:text-ink burger:inline-flex"
       >
         {ctaLabel}
@@ -70,6 +71,7 @@ const isActive = (href) =>
         links={navLinks}
         ctaHref={ctaHref}
         ctaLabel={ctaLabel}
+        ctaSegment="business"
         pathname={pathname}
         className="burger:hidden"
       />

@@ -19,6 +19,10 @@ const {
   primary = { label: "Записаться на диагностику", href: "/business#form" },
   secondary = { label: "Получить ревью ТЗ", href: "/it#form" },
 } = Astro.props;
+
+/** @param {string} href */
+const leadModalSegment = (href) =>
+  href.includes("/business") ? "business" : href.includes("/it") ? "it" : undefined;
 ---
 
 <section class="bg-dark-section">
@@ -33,12 +37,14 @@ const {
     >
       <a
         href={primary.href}
+        data-lead-modal={leadModalSegment(primary.href)}
         class="text-button inline-flex h-[var(--control-height)] items-center rounded-xl border-2 border-transparent bg-accent px-6 text-belyi no-underline transition-colors duration-[var(--motion-button)] hover:border-belyi hover:bg-transparent"
       >
         {primary.label}
       </a>
       <a
         href={secondary.href}
+        data-lead-modal={leadModalSegment(secondary.href)}
         class="text-button inline-flex h-[var(--control-height)] items-center rounded-xl border-2 border-muted bg-transparent px-6 text-belyi no-underline transition-colors duration-[var(--motion-card)] hover:border-belyi"
       >
         {secondary.label}

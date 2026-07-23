@@ -1,4 +1,4 @@
-import { useId, useRef, useState } from "react";
+import { useId, useLayoutEffect, useRef, useState } from "react";
 import { Check } from "lucide-react";
 
 import { Input } from "@/components/ui/input";
@@ -11,7 +11,14 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Checkbox } from "@/components/ui/checkbox";
+import { cn } from "@/lib/utils";
 import { CONTACTS } from "@/consts";
+import {
+  detectContactMode,
+  formatPhoneDigits,
+  normalizePhoneDigits,
+  sanitizeName,
+} from "@/lib/contact";
 
 const NICHES = [
   "Салон красоты",
@@ -110,14 +117,57 @@ function buildPayload(segment, values, page) {
   return payload;
 }
 
+function countDigits(str) {
+  return (str.match(/\d/g) || []).length;
+}
+
 /**
- * Форма заявки — правая колонка LeadFormBusiness.astro / LeadFormIt.astro.
- * Один компонент на оба сегмента: набор полей, акцент и CTA зависят от
- * пропа segment. Валидация и отправка — на клиенте, без сторонних
- * form-либов; контракт запроса/ответа — /api/lead (задача 4.2, не менять).
+ * business: режим определяется по первому непробельному символу (буква/@ —
+ * ник, +/цифра — телефон). it: маска телефона не используется вовсе — ник
+ * только для строк, начинающихся с "@", остальное (включая email) не трогаем.
  */
-export default function LeadForm({ segment }) {
+function getContactModeForSegment(raw, segment) {
+  if (segment === "it") {
+    return raw.replace(/^\s+/, "").startsWith("@") ? "nick" : "plain";
+  }
+  return detectContactMode(raw) ?? "plain";
+}
+
+/** Убирает пробелы и подставляет ведущую "@", если её нет. */
+function formatNick(raw, caret) {
+  const noSpacesBeforeCaret = raw.slice(0, caret).replace(/\s+/g, "").length;
+  const noSpacesFull = raw.replace(/\s+/g, "");
+  if (noSpacesFull === "" || noSpacesFull.startsWith("@")) {
+    return { value: noSpacesFull, caret: noSpacesBeforeCaret };
+  }
+  return { value: `@${noSpacesFull}`, caret: noSpacesBeforeCaret + 1 };
+}
+
+/** Нормализует введённые цифры и пересчитывает позицию курсора в цифрах. */
+function formatPhone(raw, digitsBeforeCaretRaw) {
+  const allDigits = raw.replace(/\D/g, "");
+  const { digits, insertedAtStart } = normalizePhoneDigits(allDigits);
+  const digitsBeforeCaret = Math.min(digitsBeforeCaretRaw + insertedAtStart, digits.length);
+  return {
+    value: formatPhoneDigits(digits),
+    caret: formatPhoneDigits(digits.slice(0, digitsBeforeCaret)).length,
+  };
+}
+
+const CARD_CLASSES =
+  "rounded-2xl border-2 border-line bg-surface p-[var(--space-6)] md:p-[var(--space-7)]";
+
+/**
+ * Форма заявки — правая колонка LeadFormBusiness.astro / LeadFormIt.astro,
+ * либо содержимое LeadModal.jsx при variant="modal". Один компонент на оба
+ * сегмента и оба варианта размещения: набор полей, акцент и CTA зависят от
+ * пропа segment; variant="modal" убирает карточную обёртку (её отступы,
+ * бордер и заголовок берёт на себя LeadModal) и reveal-анимацию, не меняя
+ * разметку полей, валидацию, payload и контракт POST /api/lead.
+ */
+export default function LeadForm({ segment, variant = "section" }) {
   const config = SEGMENT_CONFIG[segment];
+  const isModal = variant === "modal";
   const uid = useId();
 
   const [values, setValues] = useState({
@@ -136,6 +186,7 @@ export default function LeadForm({ segment }) {
   const nameRef = useRef(null);
   const contactRef = useRef(null);
   const agreeRef = useRef(null);
+  const pendingCaretRef = useRef(null);
 
   const ids = {
     company: `${uid}-company`,
@@ -153,6 +204,16 @@ export default function LeadForm({ segment }) {
 
   const isSubmitting = status === "submitting";
 
+  // Сброс каретки после сжатия/переформатирования значения в контролируемом
+  // инпуте: без этого React после re-render уводит курсор в конец поля.
+  useLayoutEffect(() => {
+    if (pendingCaretRef.current) {
+      const { el, pos } = pendingCaretRef.current;
+      pendingCaretRef.current = null;
+      el.setSelectionRange(pos, pos);
+    }
+  });
+
   function setField(key, value) {
     setValues((prev) => ({ ...prev, [key]: value }));
     setErrors((prev) => {
@@ -161,6 +222,66 @@ export default function LeadForm({ segment }) {
       delete next[key];
       return next;
     });
+  }
+
+  function handleNameChange(event) {
+    const input = event.target;
+    const raw = input.value;
+    const caret = input.selectionStart ?? raw.length;
+    const value = sanitizeName(raw);
+    const newCaret = sanitizeName(raw.slice(0, caret)).length;
+    pendingCaretRef.current = { el: input, pos: newCaret };
+    setField("name", value);
+  }
+
+  function handleContactChange(event) {
+    const input = event.target;
+    const raw = input.value;
+    const caret = input.selectionStart ?? raw.length;
+    const mode = getContactModeForSegment(raw, segment);
+
+    if (mode === "nick") {
+      const { value, caret: newCaret } = formatNick(raw, caret);
+      pendingCaretRef.current = { el: input, pos: newCaret };
+      setField("contact", value);
+      return;
+    }
+
+    if (mode === "phone") {
+      const digitsBeforeCaretRaw = countDigits(raw.slice(0, caret));
+      const { value, caret: newCaret } = formatPhone(raw, digitsBeforeCaretRaw);
+      pendingCaretRef.current = { el: input, pos: newCaret };
+      setField("contact", value);
+      return;
+    }
+
+    setField("contact", raw);
+  }
+
+  /** Backspace на разделителе маски (скобка/пробел/дефис) удаляет ближайшую цифру, а не сам разделитель. */
+  function handleContactKeyDown(event) {
+    if (segment !== "business" || event.key !== "Backspace") return;
+
+    const input = event.target;
+    if (input.selectionStart !== input.selectionEnd) return;
+
+    const caret = input.selectionStart;
+    if (!caret) return;
+
+    const raw = input.value;
+    if (detectContactMode(raw) !== "phone") return;
+    if (/\d/.test(raw[caret - 1])) return;
+
+    let removeIndex = caret - 1;
+    while (removeIndex >= 0 && !/\d/.test(raw[removeIndex])) removeIndex--;
+    if (removeIndex < 0) return;
+
+    event.preventDefault();
+    const newRaw = raw.slice(0, removeIndex) + raw.slice(removeIndex + 1);
+    const digitsBeforeCaretRaw = countDigits(newRaw.slice(0, removeIndex));
+    const { value, caret: newCaret } = formatPhone(newRaw, digitsBeforeCaretRaw);
+    pendingCaretRef.current = { el: input, pos: newCaret };
+    setField("contact", value);
   }
 
   function focusFirstInvalid(fieldErrors) {
@@ -222,11 +343,21 @@ export default function LeadForm({ segment }) {
     }
   }
 
+  const contactMode = getContactModeForSegment(values.contact, segment);
+  const contactInputMode = contactMode === "phone" ? "tel" : contactMode === "nick" ? "text" : undefined;
+
+  const hasName = values.name.trim() !== "";
+  const hasContact = values.contact.trim() !== "";
+  const canSubmit = hasName && hasContact && values.agree;
+
   if (status === "success") {
     return (
       <div
         role="status"
-        className="flex flex-col items-start gap-[var(--space-3)] rounded-2xl border-2 border-line bg-surface p-[var(--space-6)] md:p-[var(--space-7)]"
+        className={cn(
+          "flex flex-col items-start gap-[var(--space-3)]",
+          !isModal && CARD_CLASSES
+        )}
       >
         <Check className={config.accentText} aria-hidden="true" />
         <p className="text-body-article text-ink">
@@ -238,11 +369,10 @@ export default function LeadForm({ segment }) {
 
   return (
     <form
-      data-reveal
-      data-reveal-delay="100"
+      {...(!isModal && { "data-reveal": true, "data-reveal-delay": "100" })}
       onSubmit={handleSubmit}
       noValidate
-      className="flex flex-col gap-[var(--space-4)] rounded-2xl border-2 border-line bg-surface p-[var(--space-6)] md:p-[var(--space-7)]"
+      className={cn("flex flex-col gap-[var(--space-4)]", !isModal && CARD_CLASSES)}
     >
       <div className="hidden" aria-hidden="true">
         <label htmlFor={ids.company}>Не заполняйте это поле</label>
@@ -268,7 +398,7 @@ export default function LeadForm({ segment }) {
           autoComplete="name"
           placeholder="Имя"
           value={values.name}
-          onChange={(e) => setField("name", e.target.value)}
+          onChange={handleNameChange}
           disabled={isSubmitting}
           aria-invalid={Boolean(errors.name)}
           aria-describedby={errors.name ? ids.nameError : undefined}
@@ -290,9 +420,11 @@ export default function LeadForm({ segment }) {
           name="contact"
           type="text"
           autoComplete={config.contactAutoComplete}
+          inputMode={contactInputMode}
           placeholder={config.contactPlaceholder}
           value={values.contact}
-          onChange={(e) => setField("contact", e.target.value)}
+          onChange={handleContactChange}
+          onKeyDown={handleContactKeyDown}
           disabled={isSubmitting}
           aria-invalid={Boolean(errors.contact)}
           aria-describedby={errors.contact ? ids.contactError : undefined}
@@ -321,7 +453,12 @@ export default function LeadForm({ segment }) {
               >
                 <SelectValue placeholder="Чем занимаетесь" />
               </SelectTrigger>
-              <SelectContent>
+              <SelectContent
+                position="popper"
+                align="start"
+                sideOffset={4}
+                className="w-(--radix-select-trigger-width) max-h-(--radix-select-content-available-height)"
+              >
                 {NICHES.map((niche) => (
                   <SelectItem key={niche} value={niche}>
                     {niche}
@@ -415,7 +552,7 @@ export default function LeadForm({ segment }) {
 
       <button
         type="submit"
-        disabled={isSubmitting}
+        disabled={isSubmitting || !canSubmit}
         className={`text-button inline-flex h-[var(--control-height)] items-center justify-center rounded-xl border-2 border-transparent px-6 text-belyi transition-colors duration-[var(--motion-button)] hover:border-ink hover:bg-transparent hover:text-ink disabled:pointer-events-none disabled:opacity-60 ${config.buttonBg}`}
       >
         {isSubmitting ? "Отправляем…" : config.ctaText}
