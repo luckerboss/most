@@ -1,0 +1,100 @@
+---
+import { render } from "astro:content";
+import {
+  getPublishedPosts,
+  getPostsBySegment,
+  readingTime,
+  formatDate,
+  toCardProps,
+} from "@/lib/blog.js";
+import ArticleLayout from "@/layouts/ArticleLayout.astro";
+import ArticleCta from "@/components/blocks/ArticleCta.astro";
+import PostCard from "@/components/blocks/PostCard.astro";
+
+export async function getStaticPaths() {
+  const posts = await getPublishedPosts();
+  return posts.map((entry) => ({
+    params: { slug: entry.id },
+    props: { entry },
+  }));
+}
+
+const { entry } = Astro.props;
+const { Content, headings } = await render(entry);
+
+const related = (await getPostsBySegment(entry.data.segment))
+  .filter((post) => post.id !== entry.id)
+  .slice(0, 3)
+  .map(toCardProps);
+---
+
+<ArticleLayout
+  title={entry.data.title}
+  description={entry.data.description}
+  segment={entry.data.segment}
+  date={formatDate(entry.data.pubDate)}
+  minutes={readingTime(entry.body)}
+  headings={headings}
+>
+  <div class="article-prose flex flex-col gap-[var(--space-5)]">
+    <Content />
+  </div>
+
+  <ArticleCta segment={entry.data.segment} />
+
+  <div
+    data-reveal
+    class="flex flex-wrap items-center gap-[var(--space-5)] rounded-2xl border-2 border-line p-[var(--space-6)]"
+  >
+    <span
+      aria-hidden="true"
+      class="text-h4 flex h-[56px] w-[56px] shrink-0 items-center justify-center rounded-full border-2 border-line bg-hover text-muted"
+    >
+      М
+    </span>
+    <div class="flex min-w-[220px] flex-1 flex-col gap-[var(--space-1)]">
+      <span class="text-h4 text-ink">Команда «Мост»</span>
+      <span class="text-body-s text-muted text-pretty">
+        Системные аналитики. Наводим порядок в процессах и требованиях — от
+        салона до продуктовой команды.
+      </span>
+    </div>
+    <a
+      href="/about"
+      class="text-button-compact whitespace-nowrap text-accent no-underline hover:text-accent-hover"
+    >
+      Кто мы →
+    </a>
+  </div>
+
+  <Fragment slot="related">
+    {
+      related.length > 0 && (
+        <section class="border-t-2 border-line bg-bg">
+          <div class="section-shell py-[var(--space-10)] md:py-[var(--space-12)]">
+            <div
+              data-reveal
+              class="flex flex-wrap items-baseline justify-between gap-[var(--space-4)]"
+            >
+              <h2 class="text-h2 text-ink">Ещё по теме</h2>
+              <a
+                href="/blog"
+                class="text-button text-accent no-underline hover:text-accent-hover"
+              >
+                Все статьи →
+              </a>
+            </div>
+            <div
+              class="mt-[var(--space-7)] grid gap-[var(--space-6)]"
+              style="grid-template-columns:repeat(auto-fit,minmax(min(320px,100%),1fr))"
+            >
+              {related.map((post) => (
+                <PostCard {...post} />
+              ))}
+            </div>
+          </div>
+        </section>
+      )
+    }
+  </Fragment>
+</ArticleLayout>

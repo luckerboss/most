@@ -1,0 +1,71 @@
+---
+/**
+ * CTA-врезка внутри тела статьи (см. §4.2 плана). Ставится в шаблоне после
+ * тела статьи (src/pages/blog/[slug].astro) — не встраивается в середину MDX.
+ * Всегда-тёмная карточка (--dark-section, как CtaSection/ItDifferentiator):
+ * токены «на тёмном фоне» фиксированы и не зависят от темы страницы.
+ *
+ * @type {{ segment: "business" | "it" | "common" }}
+ */
+const { segment } = Astro.props;
+
+const BUTTONS = {
+  business: {
+    label: "Записаться на диагностику",
+    href: "/business#form",
+    modal: "business",
+    accent: "bg-green",
+  },
+  it: {
+    label: "Получить бесплатное ревью ТЗ",
+    href: "/it#form",
+    modal: "it",
+    accent: "bg-accent",
+  },
+};
+
+const COPY = {
+  business: {
+    eyebrow: "Для бизнеса",
+    heading: "Не уверены, что процессы пора автоматизировать?",
+    body: "Расскажите о ситуации на диагностике — покажем, где теряются заявки и во сколько это обходится сейчас.",
+    buttons: [BUTTONS.business],
+  },
+  it: {
+    eyebrow: "Бесплатное ревью",
+    heading: "Не уверены, что по вашему ТЗ можно строить?",
+    body: "Пришлите документ — за 30-минутный созвон покажем дыры и скажем, чего не хватает до рабочей спецификации.",
+    buttons: [BUTTONS.it],
+  },
+  common: {
+    eyebrow: "Не знаете, с чего начать",
+    heading: "Не уверены, что вам нужна разработка?",
+    body: "Начните с диагностики. Даже если дальше ничего не закажете — у вас останется карта проблем и понятный план, что с ними делать.",
+    buttons: [BUTTONS.business, BUTTONS.it],
+  },
+};
+
+const copy = COPY[segment] ?? COPY.common;
+---
+
+<aside
+  data-reveal
+  class="flex flex-col gap-[var(--space-3)] rounded-2xl bg-dark-section p-[var(--space-6)]"
+>
+  <span class="text-overline text-kobalt-light">{copy.eyebrow}</span>
+  <span class="text-h4 text-belyi text-pretty">{copy.heading}</span>
+  <span class="text-body-s text-text-inverse text-pretty">{copy.body}</span>
+  <div class="mt-[var(--space-2)] flex flex-wrap gap-[var(--space-3)]">
+    {
+      copy.buttons.map((btn) => (
+        <a
+          href={btn.href}
+          data-lead-modal={btn.modal}
+          class={`text-button-compact inline-flex h-[var(--control-height-compact)] items-center rounded-xl border-2 border-transparent px-5 text-belyi no-underline transition-colors duration-[var(--motion-button)] hover:border-belyi hover:bg-transparent ${btn.accent}`}
+        >
+          {btn.label}
+        </a>
+      ))
+    }
+  </div>
+</aside>

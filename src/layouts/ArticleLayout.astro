@@ -1,0 +1,225 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+
+/**
+ * Layout статьи блога (и, в перспективе, кейсов v2): шапка со
+ * хлебными крошками/бейджем сегмента/датой, колонка текста шириной
+ * --container-article (720px), sticky-оглавление рядом (если заголовков
+ * достаточно). Тело статьи передаётся default-слотом, полноширинный блок
+ * после колонки — именованным слотом `related`.
+ *
+ * @type {{
+ *   title: string,
+ *   description: string,
+ *   segment: "business" | "it" | "common",
+ *   date: string,
+ *   minutes: number,
+ *   headings: { depth: number, slug: string, text: string }[],
+ * }}
+ */
+const { title, description, segment, date, minutes, headings = [] } = Astro.props;
+
+/** Оформление бейджа сегмента — как в PostCard.astro/LatestPosts.astro (§3 токены). */
+const SEGMENTS = {
+  it: { label: "Продукт и команда", badge: "text-accent bg-accent-tint" },
+  business: { label: "Малый бизнес", badge: "text-green bg-green-tint" },
+  common: { label: "Всем", badge: "text-muted bg-hover" },
+};
+const seg = SEGMENTS[segment] ?? SEGMENTS.common;
+
+/** Оглавление — только ## и ### (depth 2–3), h1 не включаем. */
+const toc = headings.filter((h) => h.depth === 2 || h.depth === 3);
+const hasToc = toc.length >= 2;
+---
+
+<BaseLayout title={`${title} — Мост`} description={description}>
+  <section class="border-b-2 border-line bg-bg">
+    <div
+      class="section-shell flex flex-col gap-[var(--space-4)] py-[var(--space-9)] md:py-[var(--space-10)]"
+    >
+      <nav
+        aria-label="Хлебные крошки"
+        class="text-caption flex items-center gap-[var(--space-2)] text-muted"
+      >
+        <a href="/blog" class="text-accent no-underline hover:text-accent-hover">
+          Блог
+        </a>
+        <span aria-hidden="true">/</span>
+        <span aria-current="page">{title}</span>
+      </nav>
+      <div class="flex flex-wrap items-center gap-[var(--space-3)]">
+        <span
+          class={`text-caption rounded-full px-[10px] py-[5px] font-medium tracking-[0.4px] ${seg.badge}`}
+        >
+          {seg.label}
+        </span>
+        <span class="text-mono-caption text-muted">{date} · {minutes} мин</span>
+      </div>
+      <h1 data-reveal class="text-h1 max-w-[840px] text-ink text-pretty">{title}</h1>
+      <p data-reveal class="text-lead max-w-[720px] text-muted text-pretty">
+        {description}
+      </p>
+    </div>
+  </section>
+
+  <section class="bg-surface">
+    <div
+      class="section-shell grid items-start gap-[var(--space-8)] py-[var(--space-10)] md:py-[var(--space-12)]"
+      style={hasToc ? "grid-template-columns:repeat(auto-fit,minmax(min(260px,100%),1fr))" : undefined}
+    >
+      {
+        hasToc && (
+          <nav
+            data-reveal
+            aria-label="Оглавление"
+            class="flex flex-col gap-[2px] rounded-2xl border-2 border-line bg-bg p-[var(--space-5)]"
+            style="position:sticky;top:calc(var(--header-height) + var(--space-6));max-width:340px"
+          >
+            <span class="text-overline px-[var(--space-3)] pb-[var(--space-2)] text-muted">
+              Оглавление
+            </span>
+            {toc.map((h) => (
+              <a
+                href={`#${h.slug}`}
+                class:list={[
+                  "text-body-s rounded-lg px-[var(--space-3)] py-[var(--space-2)] text-ink no-underline transition-colors duration-[var(--motion-card)] hover:bg-hover hover:text-accent",
+                  h.depth === 3 && "pl-[var(--space-5)]",
+                ]}
+              >
+                {h.text}
+              </a>
+            ))}
+          </nav>
+        )
+      }
+      <article
+        class="flex flex-col gap-[var(--space-5)] text-ink"
+        style={`max-width:var(--container-article);${hasToc ? "grid-column:span 2" : "width:100%;margin-inline:auto"}`}
+      >
+        <slot />
+      </article>
+    </div>
+  </section>
+
+  <slot name="related" />
+</BaseLayout>
+
+<style>
+  /* Типографика тела статьи (§4.1 токены): без @tailwindcss/typography —
+     :global() на обёртке .article-prose (только вокруг <Content/> в
+     [slug].astro — CTA-врезка и блок автора рядом стилизуются своими
+     Tailwind-классами и не должны наследовать эти правила), размеры строго
+     из ролей проекта. */
+  :global(.article-prose h2) {
+    margin: 0;
+    font-family: var(--font-heading);
+    font-weight: 600;
+    font-size: 24px;
+    line-height: 30px;
+    letter-spacing: -0.3px;
+  }
+  :global(.article-prose h3) {
+    margin: 0;
+    font-family: var(--font-heading);
+    font-weight: 600;
+    font-size: 20px;
+    line-height: 26px;
+  }
+  :global(.article-prose p) {
+    margin: 0;
+    font-family: var(--font-sans);
+    font-weight: 400;
+    font-size: 17px;
+    line-height: 29px;
+  }
+  :global(.article-prose ul),
+  :global(.article-prose ol) {
+    margin: 0;
+    padding-left: var(--space-6);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+    font-family: var(--font-sans);
+    font-weight: 400;
+    font-size: 17px;
+    line-height: 29px;
+  }
+  :global(.article-prose ul) {
+    list-style: disc;
+  }
+  :global(.article-prose ol) {
+    list-style: decimal;
+  }
+  :global(.article-prose li) > :global(p) {
+    margin: 0;
+  }
+  :global(.article-prose blockquote) {
+    margin: 0;
+    padding: var(--space-5) var(--space-6);
+    border-left: var(--border-width) solid var(--accent);
+    background: var(--bg);
+    border-radius: 0 var(--radius-xl) var(--radius-xl) 0;
+    font-family: var(--font-sans);
+    font-weight: 400;
+    font-size: 19px;
+    line-height: 30px;
+  }
+  :global(.article-prose blockquote p) {
+    margin: 0;
+  }
+  :global(.article-prose code) {
+    font-family: var(--font-mono);
+    font-size: 13px;
+    background: var(--hover);
+    border-radius: var(--radius-sm);
+    padding: var(--space-1) var(--space-2);
+  }
+  :global(.article-prose pre) {
+    margin: 0;
+    padding: var(--space-4);
+    background: var(--bg);
+    border: var(--border-width) solid var(--line);
+    border-radius: var(--radius-xl);
+    overflow-x: auto;
+  }
+  :global(.article-prose pre code) {
+    background: none;
+    padding: 0;
+  }
+  :global(.article-prose a) {
+    color: var(--accent);
+    text-decoration: underline;
+  }
+  :global(.article-prose a:hover) {
+    color: var(--accent-hover);
+  }
+  :global(.article-prose img) {
+    max-width: 100%;
+    height: auto;
+    border-radius: var(--radius-2xl);
+  }
+  :global(.article-prose hr) {
+    border: none;
+    border-top: var(--border-width) solid var(--line);
+    margin: 0;
+  }
+  :global(.article-prose table) {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: var(--font-sans);
+    font-weight: 400;
+    font-size: 15px;
+    line-height: 24px;
+  }
+  :global(.article-prose th),
+  :global(.article-prose td) {
+    border: var(--border-width) solid var(--line);
+    padding: var(--space-3) var(--space-4);
+    text-align: left;
+  }
+  /* Якоря оглавления не должны прятаться под липкой шапкой (--header-height). */
+  :global(.article-prose h2),
+  :global(.article-prose h3) {
+    scroll-margin-top: calc(var(--header-height) + var(--space-4));
+  }
+</style>
