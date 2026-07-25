@@ -6,7 +6,6 @@ import { getPublishedPosts, toCardProps } from "@/lib/blog.js";
 const posts = await getPublishedPosts();
 const cards = posts.map(toCardProps);
 
-/** Кнопки фильтра по сегменту (значения — как в схеме коллекции blog). */
 const FILTERS = [
   { value: "all", label: "Все статьи" },
   { value: "business", label: "Для бизнеса" },
@@ -27,7 +26,8 @@ const FILTERS = [
         Разбираем хаос на примерах
       </h1>
       <p data-reveal class="text-lead max-w-[620px] text-muted text-pretty">
-        Про заявки, тетрадки и CRM — для владельцев. Про требования, SRS и
+        Про заявки, тетрадки и CRM — для владельцев. <br/>
+        Про требования, SRS и
         discovery — для команд.
       </p>
 
@@ -90,7 +90,6 @@ const FILTERS = [
     );
     const cards = Array.from(grid.querySelectorAll("[data-segment]"));
 
-    /** @param {boolean} active */
     function setActive(button, active) {
       button.setAttribute("aria-pressed", active ? "true" : "false");
       button.classList.toggle("border-accent", active);
@@ -101,7 +100,6 @@ const FILTERS = [
       button.classList.toggle("text-ink", !active);
     }
 
-    /** @param {string} value */
     function applyFilter(value) {
       cards.forEach((card) => {
         const seg = card.getAttribute("data-segment");

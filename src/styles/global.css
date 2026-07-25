@@ -1,5 +1,3 @@
-/* source(none) + @source: классы ищем только в src/, иначе Tailwind
-   сканирует и корневые .md (и генерирует классы из примеров в доках) */
 @import "tailwindcss" source(none);
 @source "../";
 @import "tw-animate-css";
@@ -9,8 +7,6 @@
 @custom-variant dark (&:is([data-theme="dark"] *));
 
 @theme {
-  /* Сбрасываем дефолтные rem-шкалы и oklch-палитру Tailwind:
-     доступны только наши токены из tokens.css */
   --spacing: initial;
   --text-*: initial;
   --radius-*: initial;
@@ -20,12 +16,10 @@
 }
 
 @theme inline {
-  /* Шрифты (self-hosted через @fontsource, подключаются в BaseLayout) */
   --font-heading: "Onest Variable", "Golos Text Variable", sans-serif;
   --font-sans: "Golos Text Variable", sans-serif;
   --font-mono: "JetBrains Mono", monospace;
 
-  /* Наша палитра → утилиты (bg-surface, text-ink, border-line, ...) */
   --color-bg: var(--bg);
   --color-surface: var(--surface);
   --color-ink: var(--ink);
@@ -45,7 +39,6 @@
   --color-dark-section: var(--dark-section);
   --color-header-bg: var(--header-bg);
 
-  /* Материалы на тёмном фоне внутри светлой темы (§3.1) */
   --color-grafit-surface: var(--grafit-surface);
   --color-grafit-line: var(--grafit-line);
   --color-text-inverse: var(--text-inverse);
@@ -53,7 +46,6 @@
   --color-kobalt-light: var(--kobalt-light);
   --color-belyi: var(--belyi);
 
-  /* Семантика shadcn → те же токены (дефолтной oklch-темы в репо нет) */
   --color-background: var(--bg);
   --color-foreground: var(--ink);
   --color-card: var(--surface);
@@ -71,7 +63,6 @@
   --color-input: var(--line2);
   --color-ring: var(--accent);
 
-  /* Скругления → rounded-sm/md/lg/xl/2xl/full */
   --radius-sm: var(--radius-sm);
   --radius-md: var(--radius-md);
   --radius-lg: var(--radius-lg);
@@ -81,12 +72,8 @@
 }
 
 @theme {
-  /* База отступов 4px: p-1 = 4px, p-2 = 8px, ... — вся шкала в px */
   --spacing: 4px;
 
-  /* Служебные Tailwind-алиасы размеров текста в px (§4.3):
-     нужны внутренностям shadcn-компонентов (button/input/card/badge…),
-     удаление ломает UI. Семантические роли контента — ниже, в @utility. */
   --text-xs: 12px;
   --text-xs--line-height: 16px;
   --text-sm: 14px;
@@ -104,13 +91,11 @@
   --text-4xl: 36px;
   --text-4xl--line-height: 40px;
 
-  /* Веса шрифтов (§4.1) */
   --font-weight-regular: 400;
   --font-weight-medium: 500;
   --font-weight-semibold: 600;
   --font-weight-bold: 700;
 
-  /* Брейкпоинты в px (§4.2): 390·768·920·1200·1440; 920 — порог бургер-меню */
   --breakpoint-sm: 390px;
   --breakpoint-md: 768px;
   --breakpoint-burger: 920px;
@@ -127,7 +112,6 @@
     font-family: var(--font-sans);
   }
 
-  /* Видимый фокус с клавиатуры (§6): 2px, offset 2px, цвет акцента (авто светлая/тёмная) */
   :focus-visible {
     outline: var(--border-width) solid var(--accent);
     outline-offset: 2px;
@@ -138,6 +122,11 @@
     color: var(--ink);
     font-size: 16px;
     line-height: 24px;
+  }
+
+  ::selection {
+    background-color: var(--selection-bg);
+    color: var(--selection-ink);
   }
 
   h1,
@@ -163,9 +152,6 @@
 }
 
 @layer components {
-  /* Семантические типографические роли (§4.1): один класс = семейство + вес +
-     размер + межстрочный + трекинг (+ мобильная адаптация для display/h1/h2 ниже 768px).
-     Значения размеров — только px, цвет задаётся отдельными утилитами (text-ink и т.п.). */
   .text-display {
     font-family: var(--font-heading);
     font-weight: 700;
@@ -183,7 +169,7 @@
   .text-h2 {
     font-family: var(--font-heading);
     font-weight: 700;
-    font-size: 40px;
+    font-size: 32px;
     line-height: 46px;
     letter-spacing: -0.3px;
   }
@@ -196,7 +182,7 @@
   .text-h4 {
     font-family: var(--font-heading);
     font-weight: 600;
-    font-size: 20px;
+    font-size: 16px;
     line-height: 26px;
   }
   .text-lead {
@@ -256,7 +242,6 @@
     line-height: 20px;
   }
 
-  /* Мобильная адаптация (ниже брейкпоинта 768px) — только display/h1/h2 (§4.1) */
   @media (max-width: 767px) {
     .text-display {
       font-size: 38px;
@@ -272,8 +257,6 @@
     }
   }
 
-  /* Внутренний контейнер секции: ширина контента + поля страницы (§4.2).
-     max-width 1352px = контент 1240px + поля по 56px; на мобиле поля 20px. */
   .section-shell {
     width: 100%;
     max-width: var(--container-max);
@@ -286,10 +269,6 @@
     }
   }
 
-  /* Reveal-анимация при скролле (§4.2, motion-reveal 650ms).
-     Инлайн-скрипт добавляет .reveal-on на <html> ДО отрисовки секций, только
-     если движение разрешено и есть IntersectionObserver, — поэтому без JS или
-     при prefers-reduced-motion контент всегда виден (нет скрытого состояния). */
   .reveal-on [data-reveal] {
     opacity: 0;
     transform: translateY(16px);
@@ -301,11 +280,48 @@
     opacity: 1;
     transform: none;
   }
+
+  .btn-primary {
+    @apply inline-flex h-[var(--control-height)] items-center justify-center rounded-xl border-2 border-transparent px-6 no-underline transition-colors duration-[var(--motion-button)];
+    font-family: var(--font-sans);
+    font-weight: 600;
+    font-size: 17px;
+    line-height: 24px;
+    color: var(--belyi);
+  }
+  .btn-primary-compact {
+    @apply h-[var(--control-height-compact)] px-5;
+    font-size: 15px;
+    line-height: 20px;
+  }
+  .btn-primary-accent {
+    background-color: var(--accent);
+  }
+  .btn-primary-accent:hover {
+    background-color: var(--btn-accent-hover);
+  }
+  .btn-primary-green {
+    background-color: var(--green);
+  }
+  .btn-primary-green:hover {
+    background-color: var(--btn-green-hover);
+  }
+
+  .accordion-native {
+    interpolate-size: allow-keywords;
+  }
+  .accordion-native::details-content {
+    block-size: 0;
+    overflow: hidden;
+    transition:
+      block-size var(--motion-accordion) ease,
+      content-visibility var(--motion-accordion) ease allow-discrete;
+  }
+  .accordion-native[open]::details-content {
+    block-size: auto;
+  }
 }
 
-/* Появление элементов hero-композиции «хаос → мост → порядок».
-   Задержки заданы инлайн у каждого элемента; проигрываются один раз при
-   загрузке. При prefers-reduced-motion — сразу финальное состояние. */
 @keyframes mostDraw {
   to {
     stroke-dashoffset: 0;

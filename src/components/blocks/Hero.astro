@@ -1,14 +1,7 @@
 ---
-/**
- * Hero главной: метафора «Мост» — линия, соединяющая хаос в процессах и
- * работающую систему. Заголовок/подзаголовок и CTA — из макета (не менять).
- * Справа — декоративная композиция «хаос → мост → порядок» (aria-hidden),
- * появляется покадрово при загрузке (data-anim, keyframes в global.css).
- */
 ---
 
 <section class="relative overflow-hidden bg-bg">
-  <!-- Миллиметровая сетка фоном, скрыта радиальной маской -->
   <div
     aria-hidden="true"
     class="pointer-events-none absolute inset-0"
@@ -20,7 +13,6 @@
     class="section-shell relative grid items-center gap-[var(--space-8)] py-[var(--space-10)] md:gap-[var(--space-10)] md:py-[var(--space-12)]"
     style="grid-template-columns:repeat(auto-fit,minmax(min(440px,100%),1fr))"
   >
-    <!-- Текстовая колонка -->
     <div
       data-reveal
       class="flex max-w-[600px] flex-col items-start gap-[var(--space-6)]"
@@ -39,7 +31,7 @@
       <div class="mt-[var(--space-2)] flex flex-wrap gap-[14px]">
         <a
           href="#fork"
-          class="text-button inline-flex h-[var(--control-height)] items-center gap-[10px] rounded-xl border-2 border-transparent bg-accent px-6 text-belyi no-underline transition-colors duration-[var(--motion-button)] hover:border-ink hover:bg-transparent hover:text-ink"
+          class="btn-primary btn-primary-accent gap-[10px]"
         >
           Выбрать, с чего начать<span aria-hidden="true" class="text-[18px]"
             >↓</span
@@ -54,7 +46,6 @@
       </div>
     </div>
 
-    <!-- Композиция «хаос → мост → порядок» -->
     <div
       data-reveal
       data-reveal-delay="150"
@@ -62,7 +53,6 @@
       class="flex min-w-0 flex-col gap-[18px]"
     >
       <div class="flex flex-wrap items-center gap-[10px]">
-        <!-- Хаос: разрозненные заметки -->
         <div class="flex w-[178px] shrink-0 flex-col">
           <div
             data-anim
@@ -94,7 +84,6 @@
           </div>
         </div>
 
-        <!-- Мост -->
         <svg
           viewBox="0 0 220 120"
           fill="none"
@@ -114,7 +103,6 @@
           <circle cx="214" cy="84" r="3.2" fill="var(--accent)" data-anim style="opacity:0;animation:mostPop .3s ease 2.1s forwards"></circle>
         </svg>
 
-        <!-- Порядок: панель «под контролем» -->
         <div class="grid w-[216px] shrink-0 grid-cols-2 gap-[var(--space-2)]">
           <div
             data-anim

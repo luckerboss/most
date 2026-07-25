@@ -1,7 +1,3 @@
-/**
- * POST /api/lead — приём заявок с форм LeadFormBusiness/LeadFormIt.
- * Контракт запроса/ответа зафиксирован заранее для задачи 4.3 (оживление форм).
- */
 import { mkdir, appendFile } from 'node:fs/promises';
 import path from 'node:path';
 import { isValidName, validateContact } from '@/lib/contact';
@@ -11,7 +7,6 @@ export const prerender = false;
 const RATE_LIMIT_WINDOW_MS = 10 * 60 * 1000;
 const RATE_LIMIT_MAX = 3;
 
-/** ip -> timestamps[] последних запросов в пределах окна */
 const rateLimitStore = new Map();
 
 const LIMITS = {

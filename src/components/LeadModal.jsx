@@ -2,13 +2,13 @@ import { useEffect, useRef, useState } from "react";
 
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import LeadForm from "@/components/LeadForm.jsx";
-import { YM_COUNTER_ID } from "@/consts";
+import { reachGoal } from "@/lib/analytics";
 
 const SEGMENT_CONTENT = {
   business: {
     overline: "ДЛЯ МАЛОГО БИЗНЕСА",
     title: "Записаться на диагностику",
-    subtitle: "1–2 недели · 40–80 тыс ₽ · ответим в течение рабочего дня",
+    subtitle: "1–2 недели · 40–80 тыс ₽",
     overlineAccent: "text-green",
   },
   it: {
@@ -18,6 +18,8 @@ const SEGMENT_CONTENT = {
     overlineAccent: "text-accent",
   },
 };
+
+const AUTO_CLOSE_DELAY_MS = 5000;
 
 function isPlainLeftClick(event) {
   return (
@@ -29,24 +31,11 @@ function isPlainLeftClick(event) {
   );
 }
 
-function sendModalOpenGoal(segment) {
-  if (typeof window.ym === "function") {
-    window.ym(YM_COUNTER_ID, "reachGoal", "modal_open", { segment });
-  }
-}
-
-/**
- * Глобальная модалка с формой заявки — один экземпляр на страницу
- * (BaseLayout, client:idle). Открывается делегированием кликов по документу:
- * любой элемент с data-lead-modal="business"|"it" в разметке триггерит
- * модалку, без обёрток-триггеров вокруг каждой ссылки. Обычный переход по
- * ссылке (новая вкладка, Cmd/Ctrl/Shift/Alt-клик) не перехватывается — сайт
- * работает по-старому без JS.
- */
 export default function LeadModal() {
   const [open, setOpen] = useState(false);
   const [segment, setSegment] = useState(null);
   const triggerRef = useRef(null);
+  const closeTimeoutRef = useRef(null);
 
   useEffect(() => {
     function onClick(event) {
@@ -63,21 +52,29 @@ export default function LeadModal() {
       triggerRef.current = trigger;
       setSegment(nextSegment);
       setOpen(true);
-      sendModalOpenGoal(nextSegment);
+      reachGoal("modal_open", { segment: nextSegment });
     }
 
     document.addEventListener("click", onClick);
     return () => document.removeEventListener("click", onClick);
   }, []);
 
-  /**
-   * Открытие идёт через делегирование кликов, а не Dialog.Trigger, поэтому
-   * Radix не знает, куда вернуть фокус при закрытии, — держим триггер сами
-   * и перехватываем onCloseAutoFocus (иначе фокус улетает на body: в этой
-   * версии Radix эффект автофокуса пересоздаётся на промежуточном рендере
-   * open→closed и к моменту реального размонтирования ссылается на элемент
-   * внутри формы, который уже удалён из DOM).
-   */
+  useEffect(() => {
+    return () => clearTimeout(closeTimeoutRef.current);
+  }, []);
+
+  function handleOpenChange(next) {
+    setOpen(next);
+    if (!next) {
+      clearTimeout(closeTimeoutRef.current);
+    }
+  }
+
+  function handleFormSuccess() {
+    clearTimeout(closeTimeoutRef.current);
+    closeTimeoutRef.current = setTimeout(() => setOpen(false), AUTO_CLOSE_DELAY_MS);
+  }
+
   function handleCloseAutoFocus(event) {
     event.preventDefault();
     triggerRef.current?.focus({ preventScroll: true });
@@ -86,7 +83,7 @@ export default function LeadModal() {
   const content = segment ? SEGMENT_CONTENT[segment] : null;
 
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
+    <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogContent onCloseAutoFocus={handleCloseAutoFocus}>
         {content && (
           <>
@@ -97,7 +94,7 @@ export default function LeadModal() {
               <DialogTitle className="text-h3 text-ink">{content.title}</DialogTitle>
               <p className="text-body-s text-muted">{content.subtitle}</p>
             </div>
-            <LeadForm segment={segment} variant="modal" />
+            <LeadForm segment={segment} variant="modal" onSuccess={handleFormSuccess} />
           </>
         )}
       </DialogContent>

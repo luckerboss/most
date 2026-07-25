@@ -1,25 +1,8 @@
 ---
 import BaseLayout from "@/layouts/BaseLayout.astro";
 
-/**
- * Layout статьи блога (и, в перспективе, кейсов v2): шапка со
- * хлебными крошками/бейджем сегмента/датой, колонка текста шириной
- * --container-article (720px), sticky-оглавление рядом (если заголовков
- * достаточно). Тело статьи передаётся default-слотом, полноширинный блок
- * после колонки — именованным слотом `related`.
- *
- * @type {{
- *   title: string,
- *   description: string,
- *   segment: "business" | "it" | "common",
- *   date: string,
- *   minutes: number,
- *   headings: { depth: number, slug: string, text: string }[],
- * }}
- */
 const { title, description, segment, date, minutes, headings = [] } = Astro.props;
 
-/** Оформление бейджа сегмента — как в PostCard.astro/LatestPosts.astro (§3 токены). */
 const SEGMENTS = {
   it: { label: "Продукт и команда", badge: "text-accent bg-accent-tint" },
   business: { label: "Малый бизнес", badge: "text-green bg-green-tint" },
@@ -27,12 +10,13 @@ const SEGMENTS = {
 };
 const seg = SEGMENTS[segment] ?? SEGMENTS.common;
 
-/** Оглавление — только ## и ### (depth 2–3), h1 не включаем. */
+const bodySegment = segment === "it" ? "it" : "business";
+
 const toc = headings.filter((h) => h.depth === 2 || h.depth === 3);
 const hasToc = toc.length >= 2;
 ---
 
-<BaseLayout title={`${title} — Мост`} description={description}>
+<BaseLayout title={`${title} — Мост`} description={description} segment={bodySegment}>
   <section class="border-b-2 border-line bg-bg">
     <div
       class="section-shell flex flex-col gap-[var(--space-4)] py-[var(--space-9)] md:py-[var(--space-10)]"
@@ -105,11 +89,6 @@ const hasToc = toc.length >= 2;
 </BaseLayout>
 
 <style>
-  /* Типографика тела статьи (§4.1 токены): без @tailwindcss/typography —
-     :global() на обёртке .article-prose (только вокруг <Content/> в
-     [slug].astro — CTA-врезка и блок автора рядом стилизуются своими
-     Tailwind-классами и не должны наследовать эти правила), размеры строго
-     из ролей проекта. */
   :global(.article-prose h2) {
     margin: 0;
     font-family: var(--font-heading);
@@ -217,7 +196,6 @@ const hasToc = toc.length >= 2;
     padding: var(--space-3) var(--space-4);
     text-align: left;
   }
-  /* Якоря оглавления не должны прятаться под липкой шапкой (--header-height). */
   :global(.article-prose h2),
   :global(.article-prose h3) {
     scroll-margin-top: calc(var(--header-height) + var(--space-4));

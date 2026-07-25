@@ -1,13 +1,8 @@
 ---
-/**
- * FAQ страницы услуг. Статичный аккордеон на нативных <details>/<summary> —
- * без JS и без React-острова: работает и с отключённым скриптом, доступен с
- * клавиатуры. Роль заголовка вопроса — font-h4 (в конвенции §4.1 h4 = аккордеон).
- */
 const items = [
   {
     q: "Можно ли прийти сразу за разработкой?",
-    a: "Можно — если у вас уже есть проработанные требования: проверим их на бесплатном ревью. Если требований нет, разработка без диагностики и проектирования — лотерея за ваш счёт, мы так не работаем.",
+    a: "Можно, если у вас уже есть проработанные требования. Мы проверим их на ревью. Если требований нет, разработка без диагностики и проектирования — это лотерея за ваш счёт, мы так не работаем.",
   },
   {
     q: "У нас своя команда разработки. Что тогда?",
@@ -41,7 +36,7 @@ const items = [
     >
       {
         items.map((f, i) => (
-          <details class:list={["group", i > 0 && "border-t-2 border-line"]}>
+          <details class:list={["group", "accordion-native", i > 0 && "border-t-2 border-line"]}>
             <summary
               class="text-h4 flex cursor-pointer list-none items-center justify-between gap-[var(--space-4)] px-[var(--space-6)] py-[var(--space-5)] text-ink transition-colors duration-[var(--motion-card)] hover:bg-bg [&::-webkit-details-marker]:hidden"
             >
@@ -53,9 +48,11 @@ const items = [
                 ▼
               </span>
             </summary>
-            <p class="text-body-s px-[var(--space-6)] pb-[var(--space-5)] text-muted text-pretty">
-              {f.a}
-            </p>
+            <div class="px-[var(--space-6)] pb-[var(--space-5)]">
+              <p class="text-body-s text-muted text-pretty">
+                {f.a}
+              </p>
+            </div>
           </details>
         ))
       }

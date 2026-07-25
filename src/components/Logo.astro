@@ -1,13 +1,4 @@
 ---
-/**
- * Логотип "Мост" — инлайн SVG-метка (без wordmark). В отличие от favicon.svg
- * (там переключение через prefers-color-scheme), здесь тема — через атрибут
- * data-theme на <html>, т.к. на сайте ручной тоггл темы с сохранением в
- * localStorage (см. BaseLayout anti-FOUC-скрипт) — вкладка браузера и
- * содержимое страницы не обязаны быть в одной теме.
- *
- * @type {{ size?: number }}
- */
 const { size = 32 } = Astro.props;
 ---
 
@@ -28,9 +19,9 @@ const { size = 32 } = Astro.props;
 
 <style>
   .logo-mark path {
-    fill: rgb(26, 31, 41); /* logo-dark.svg — светлая тема */
+    fill: rgb(26, 31, 41);
   }
   :global([data-theme="dark"]) .logo-mark path {
-    fill: rgb(255, 255, 255); /* logo-white.svg — тёмная тема */
+    fill: rgb(255, 255, 255);
   }
 </style>

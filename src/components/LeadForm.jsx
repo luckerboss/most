@@ -12,6 +12,7 @@ import {
 } from "@/components/ui/select";
 import { Checkbox } from "@/components/ui/checkbox";
 import { cn } from "@/lib/utils";
+import { reachGoal } from "@/lib/analytics";
 import { CONTACTS } from "@/consts";
 import {
   detectContactMode,
@@ -38,7 +39,7 @@ const SEGMENT_CONFIG = {
     fieldFocus: "focus:border-green",
     linkText: "text-green",
     linkHoverText: "hover:text-green-hover",
-    buttonBg: "bg-green",
+    buttonBg: "btn-primary-green",
     checkboxChecked: "data-checked:border-green data-checked:bg-green",
     accentText: "text-green",
   },
@@ -50,20 +51,20 @@ const SEGMENT_CONFIG = {
     fieldFocus: "focus:border-accent",
     linkText: "text-accent",
     linkHoverText: "hover:text-accent-hover",
-    buttonBg: "bg-accent",
+    buttonBg: "btn-primary-accent",
     checkboxChecked: "data-checked:border-accent data-checked:bg-accent",
     accentText: "text-accent",
   },
 };
 
 const FIELD_BASE =
-  "h-[var(--control-height)] w-full rounded-lg border-2 border-line bg-surface px-[var(--space-4)] text-body text-ink ring-0 transition-colors duration-[var(--motion-card)] focus-visible:ring-0 disabled:cursor-not-allowed disabled:opacity-60";
+  "w-full rounded-lg border-2 border-line bg-surface px-[var(--space-4)] text-body text-ink ring-0 transition-colors duration-[var(--motion-card)] focus-visible:ring-0 disabled:cursor-not-allowed disabled:opacity-60";
 
 const TEXTAREA_BASE =
   "field-sizing-fixed min-h-[96px] w-full resize-y rounded-lg border-2 border-line bg-surface px-[var(--space-4)] py-[var(--space-3)] text-body text-ink ring-0 transition-colors duration-[var(--motion-card)] focus-visible:ring-0 disabled:cursor-not-allowed disabled:opacity-60";
 
 const SELECT_TRIGGER_BASE =
-  "h-[var(--control-height)] w-full justify-between rounded-lg border-2 border-line bg-surface px-[var(--space-4)] text-body text-ink ring-0 transition-colors duration-[var(--motion-card)] focus-visible:ring-0 disabled:cursor-not-allowed disabled:opacity-60 data-placeholder:text-muted";
+  "w-full justify-between rounded-lg border-2 border-line bg-surface px-[var(--space-4)] text-body text-ink ring-0 transition-colors duration-[var(--motion-card)] focus-visible:ring-0 disabled:cursor-not-allowed disabled:opacity-60 data-placeholder:text-muted";
 
 const CHECKBOX_BASE =
   "mt-[3px] h-[18px] w-[18px] shrink-0 border-2 border-line ring-0 focus-visible:ring-0";
@@ -74,11 +75,6 @@ const FIELD_ERROR_MESSAGES = {
   agree: "Нужно согласие на обработку данных",
 };
 
-/**
- * Клиентская валидация — зеркалит обязательные поля серверной схемы
- * (см. validate() в src/pages/api/lead.js: name, contact, agree), но мягче:
- * не проверяет длину и формат — за это отвечает сервер.
- */
 function validate(values) {
   const errors = {};
   if (!values.name.trim()) errors.name = FIELD_ERROR_MESSAGES.name;
@@ -87,7 +83,6 @@ function validate(values) {
   return errors;
 }
 
-/** Переводит fields{} из ответа 400/validation в сообщения под полями. */
 function mapServerErrors(fields) {
   const errors = {};
   for (const key of Object.keys(fields)) {
@@ -96,7 +91,6 @@ function mapServerErrors(fields) {
   return errors;
 }
 
-/** Собирает тело POST /api/lead по контракту 4.2. */
 function buildPayload(segment, values, page) {
   const payload = {
     segment,
@@ -121,11 +115,6 @@ function countDigits(str) {
   return (str.match(/\d/g) || []).length;
 }
 
-/**
- * business: режим определяется по первому непробельному символу (буква/@ —
- * ник, +/цифра — телефон). it: маска телефона не используется вовсе — ник
- * только для строк, начинающихся с "@", остальное (включая email) не трогаем.
- */
 function getContactModeForSegment(raw, segment) {
   if (segment === "it") {
     return raw.replace(/^\s+/, "").startsWith("@") ? "nick" : "plain";
@@ -133,7 +122,6 @@ function getContactModeForSegment(raw, segment) {
   return detectContactMode(raw) ?? "plain";
 }
 
-/** Убирает пробелы и подставляет ведущую "@", если её нет. */
 function formatNick(raw, caret) {
   const noSpacesBeforeCaret = raw.slice(0, caret).replace(/\s+/g, "").length;
   const noSpacesFull = raw.replace(/\s+/g, "");
@@ -143,7 +131,6 @@ function formatNick(raw, caret) {
   return { value: `@${noSpacesFull}`, caret: noSpacesBeforeCaret + 1 };
 }
 
-/** Нормализует введённые цифры и пересчитывает позицию курсора в цифрах. */
 function formatPhone(raw, digitsBeforeCaretRaw) {
   const allDigits = raw.replace(/\D/g, "");
   const { digits, insertedAtStart } = normalizePhoneDigits(allDigits);
@@ -157,18 +144,15 @@ function formatPhone(raw, digitsBeforeCaretRaw) {
 const CARD_CLASSES =
   "rounded-2xl border-2 border-line bg-surface p-[var(--space-6)] md:p-[var(--space-7)]";
 
-/**
- * Форма заявки — правая колонка LeadFormBusiness.astro / LeadFormIt.astro,
- * либо содержимое LeadModal.jsx при variant="modal". Один компонент на оба
- * сегмента и оба варианта размещения: набор полей, акцент и CTA зависят от
- * пропа segment; variant="modal" убирает карточную обёртку (её отступы,
- * бордер и заголовок берёт на себя LeadModal) и reveal-анимацию, не меняя
- * разметку полей, валидацию, payload и контракт POST /api/lead.
- */
-export default function LeadForm({ segment, variant = "section" }) {
+export default function LeadForm({ segment, variant = "section", onSuccess }) {
   const config = SEGMENT_CONFIG[segment];
   const isModal = variant === "modal";
   const uid = useId();
+
+  const fieldHeight = isModal ? "h-[var(--control-height-modal)]" : "h-[var(--control-height)]";
+  const selectHeight = isModal
+    ? "h-[var(--control-height-modal)] data-[size=default]:h-[var(--control-height-modal)]"
+    : "h-[var(--control-height)] data-[size=default]:h-[var(--control-height)]";
 
   const [values, setValues] = useState({
     name: "",
@@ -204,8 +188,6 @@ export default function LeadForm({ segment, variant = "section" }) {
 
   const isSubmitting = status === "submitting";
 
-  // Сброс каретки после сжатия/переформатирования значения в контролируемом
-  // инпуте: без этого React после re-render уводит курсор в конец поля.
   useLayoutEffect(() => {
     if (pendingCaretRef.current) {
       const { el, pos } = pendingCaretRef.current;
@@ -258,7 +240,6 @@ export default function LeadForm({ segment, variant = "section" }) {
     setField("contact", raw);
   }
 
-  /** Backspace на разделителе маски (скобка/пробел/дефис) удаляет ближайшую цифру, а не сам разделитель. */
   function handleContactKeyDown(event) {
     if (segment !== "business" || event.key !== "Backspace") return;
 
@@ -314,6 +295,8 @@ export default function LeadForm({ segment, variant = "section" }) {
 
       if (response.ok) {
         setStatus("success");
+        reachGoal("lead_submit", { segment, place: isModal ? "modal" : "inline" });
+        onSuccess?.();
         return;
       }
 
@@ -402,7 +385,7 @@ export default function LeadForm({ segment, variant = "section" }) {
           disabled={isSubmitting}
           aria-invalid={Boolean(errors.name)}
           aria-describedby={errors.name ? ids.nameError : undefined}
-          className={`${FIELD_BASE} ${config.fieldFocus}`}
+          className={`${FIELD_BASE} ${fieldHeight} ${config.fieldFocus}`}
           suppressHydrationWarning
         />
         {errors.name && (
@@ -428,7 +411,7 @@ export default function LeadForm({ segment, variant = "section" }) {
           disabled={isSubmitting}
           aria-invalid={Boolean(errors.contact)}
           aria-describedby={errors.contact ? ids.contactError : undefined}
-          className={`${FIELD_BASE} ${config.fieldFocus}`}
+          className={`${FIELD_BASE} ${fieldHeight} ${config.fieldFocus}`}
           suppressHydrationWarning
         />
         {errors.contact && (
@@ -449,7 +432,7 @@ export default function LeadForm({ segment, variant = "section" }) {
             >
               <SelectTrigger
                 id={ids.niche}
-                className={`${SELECT_TRIGGER_BASE} ${config.fieldFocus}`}
+                className={`${SELECT_TRIGGER_BASE} ${selectHeight} ${config.fieldFocus}`}
               >
                 <SelectValue placeholder="Чем занимаетесь" />
               </SelectTrigger>
@@ -495,7 +478,7 @@ export default function LeadForm({ segment, variant = "section" }) {
             onChange={(e) => setField("link", e.target.value)}
             disabled={isSubmitting}
             aria-describedby={ids.linkHint}
-            className={`${FIELD_BASE} ${config.fieldFocus}`}
+            className={`${FIELD_BASE} ${fieldHeight} ${config.fieldFocus}`}
             suppressHydrationWarning
           />
           <span id={ids.linkHint} className="text-caption text-muted">
@@ -553,7 +536,7 @@ export default function LeadForm({ segment, variant = "section" }) {
       <button
         type="submit"
         disabled={isSubmitting || !canSubmit}
-        className={`text-button inline-flex h-[var(--control-height)] items-center justify-center rounded-xl border-2 border-transparent px-6 text-belyi transition-colors duration-[var(--motion-button)] hover:border-ink hover:bg-transparent hover:text-ink disabled:pointer-events-none disabled:opacity-60 ${config.buttonBg}`}
+        className={`btn-primary ${config.buttonBg} disabled:pointer-events-none disabled:opacity-60`}
       >
         {isSubmitting ? "Отправляем…" : config.ctaText}
       </button>

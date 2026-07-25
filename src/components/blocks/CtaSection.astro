@@ -1,17 +1,4 @@
 ---
-/**
- * Финальная CTA-секция на тёмной подложке (--dark-section). Переиспользуется на
- * других лендингах — тексты и кнопки параметризованы, дефолты берутся из макета
- * главной. Формы подключаются на фазе 4, пока — ссылки на страницы сегментов.
- *
- * @type {{
- *   title?: string,
- *   text?: string,   // передать null/"" чтобы скрыть подзаголовок (напр. CTA /about)
- *   note?: string,
- *   primary?: { label: string, href: string },
- *   secondary?: { label: string, href: string },
- * }}
- */
 const {
   title = "Не уверены, что вам нужна разработка?",
   text = "Начните с диагностики. Даже если дальше ничего не закажете — у вас останется карта проблем и понятный план, что с ними делать.",
@@ -20,7 +7,6 @@ const {
   secondary = { label: "Получить ревью ТЗ", href: "/it#form" },
 } = Astro.props;
 
-/** @param {string} href */
 const leadModalSegment = (href) =>
   href.includes("/business") ? "business" : href.includes("/it") ? "it" : undefined;
 ---
@@ -29,7 +15,7 @@ const leadModalSegment = (href) =>
   <div
     class="section-shell flex flex-col items-start gap-[var(--space-6)] py-[var(--space-10)] md:py-[var(--space-12)]"
   >
-    <h2 data-reveal class="text-h2 max-w-[720px] text-belyi">{title}</h2>
+    <h2 data-reveal class="text-h2 max-w-[720px] text-balance text-belyi">{title}</h2>
     {text && <p data-reveal class="text-lead max-w-[640px] text-text-inverse">{text}</p>}
     <div
       data-reveal
@@ -38,7 +24,7 @@ const leadModalSegment = (href) =>
       <a
         href={primary.href}
         data-lead-modal={leadModalSegment(primary.href)}
-        class="text-button inline-flex h-[var(--control-height)] items-center rounded-xl border-2 border-transparent bg-accent px-6 text-belyi no-underline transition-colors duration-[var(--motion-button)] hover:border-belyi hover:bg-transparent"
+        class="btn-primary btn-primary-accent"
       >
         {primary.label}
       </a>

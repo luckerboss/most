@@ -11,19 +11,6 @@ import {
 } from "@/components/ui/sheet";
 import { cn } from "@/lib/utils";
 
-/**
- * Мобильное меню (< 920px, порог бургер-меню, §4.2) — бургер + shadcn Sheet.
- * Список пунктов приходит пропом из Header.astro (единый источник, не дублируем).
- *
- * @param {{
- *   links: { label: string, href: string }[],
- *   ctaHref: string,
- *   ctaLabel: string,
- *   ctaSegment: "business" | "it",
- *   pathname: string,
- *   className?: string,
- * }} props
- */
 export default function MobileNav({ links, ctaHref, ctaLabel, ctaSegment, pathname, className }) {
   const isActive = (href) =>
     href === "/blog" ? pathname === "/blog" || pathname.startsWith("/blog/") : pathname === href;

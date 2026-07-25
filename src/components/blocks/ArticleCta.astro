@@ -1,12 +1,4 @@
 ---
-/**
- * CTA-врезка внутри тела статьи (см. §4.2 плана). Ставится в шаблоне после
- * тела статьи (src/pages/blog/[slug].astro) — не встраивается в середину MDX.
- * Всегда-тёмная карточка (--dark-section, как CtaSection/ItDifferentiator):
- * токены «на тёмном фоне» фиксированы и не зависят от темы страницы.
- *
- * @type {{ segment: "business" | "it" | "common" }}
- */
 const { segment } = Astro.props;
 
 const BUTTONS = {
@@ -14,13 +6,13 @@ const BUTTONS = {
     label: "Записаться на диагностику",
     href: "/business#form",
     modal: "business",
-    accent: "bg-green",
+    accent: "btn-primary-green",
   },
   it: {
     label: "Получить бесплатное ревью ТЗ",
     href: "/it#form",
     modal: "it",
-    accent: "bg-accent",
+    accent: "btn-primary-accent",
   },
 };
 
@@ -61,7 +53,7 @@ const copy = COPY[segment] ?? COPY.common;
         <a
           href={btn.href}
           data-lead-modal={btn.modal}
-          class={`text-button-compact inline-flex h-[var(--control-height-compact)] items-center rounded-xl border-2 border-transparent px-5 text-belyi no-underline transition-colors duration-[var(--motion-button)] hover:border-belyi hover:bg-transparent ${btn.accent}`}
+          class={`btn-primary btn-primary-compact ${btn.accent}`}
         >
           {btn.label}
         </a>

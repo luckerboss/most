@@ -1,22 +1,6 @@
 ---
-/**
- * Карточка статьи блога (индекс /blog). Пропсы — контракт toCardProps()
- * (src/lib/blog.js): { title, excerpt, href, date, minutes, segment }.
- * Корневой элемент несёт data-segment — по нему работает фильтр сегментов
- * на странице /blog (см. <script> в src/pages/blog/index.astro).
- *
- * @type {{
- *   title: string,
- *   excerpt: string,
- *   href: string,
- *   date: string,
- *   minutes: number,
- *   segment: "business" | "it" | "common",
- * }}
- */
 const { title, excerpt, href, date, minutes, segment } = Astro.props;
 
-/** Оформление бейджа сегмента: подпись + цвет текста/подложки (§3 токены). */
 const SEGMENTS = {
   it: { label: "Продукт и команда", badge: "text-accent bg-accent-tint" },
   business: { label: "Малый бизнес", badge: "text-green bg-green-tint" },

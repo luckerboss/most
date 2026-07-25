@@ -17,7 +17,6 @@ const ctaLabel = "Записаться на диагностику";
 
 const { pathname } = Astro.url;
 
-/** @param {string} href */
 const isActive = (href) =>
   href === "/blog" ? pathname === "/blog" || pathname.startsWith("/blog/") : pathname === href;
 ---
@@ -62,7 +61,7 @@ const isActive = (href) =>
       <a
         href={ctaHref}
         data-lead-modal="business"
-        class="text-button-compact hidden h-[var(--control-height-compact)] items-center whitespace-nowrap rounded-lg border-2 border-transparent bg-accent px-5 text-belyi no-underline transition-colors duration-[var(--motion-button)] hover:border-ink hover:bg-transparent hover:text-ink burger:inline-flex"
+        class="btn-primary btn-primary-compact btn-primary-accent hidden whitespace-nowrap burger:inline-flex"
       >
         {ctaLabel}
       </a>

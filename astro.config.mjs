@@ -21,7 +21,8 @@ export default defineConfig({
       '.ngrok-free.app',
       '.ngrok-free.dev',
       '.ngrok.app',
-      '.ngrok.io'
+      '.ngrok.io',
+      '.trycloudflare.com'
     ]
   }
 });

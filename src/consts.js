@@ -9,5 +9,4 @@ export const CONTACTS = {
   },
 };
 
-/** Счётчик Яндекс.Метрики ещё не подключён на сайте — вписать ID при установке тега. */
-export const YM_COUNTER_ID = null;
+export const YM_COUNTER_ID = 110976683;
