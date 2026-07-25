@@ -3,6 +3,7 @@
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
 @import "./tokens.css";
+@import "./prose.css";
 
 @custom-variant dark (&:is([data-theme="dark"] *));
 
@@ -344,6 +345,32 @@
     opacity: 1;
     transform: translateY(0);
   }
+}
+@keyframes cookieUp {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+@keyframes cookieDown {
+  from {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+}
+#cookie-notice {
+  display: none;
+}
+html[data-cookie-notice="pending"] #cookie-notice {
+  display: flex;
 }
 @media (prefers-reduced-motion: reduce) {
   [data-anim] {

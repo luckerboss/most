@@ -1,0 +1,97 @@
+---
+import { COOKIE_CONSENT_VERSION, YM_COUNTER_ID } from "@/consts";
+---
+
+<div
+  id="cookie-notice"
+  role="region"
+  aria-label="Уведомление о cookies"
+  class="pointer-events-none fixed inset-x-3 bottom-3 z-[90] flex justify-center"
+>
+  <div
+    id="cookie-notice-card"
+    data-anim
+    class="pointer-events-auto relative flex max-w-[980px] flex-wrap items-center gap-[var(--space-4)] rounded-2xl border-2 border-line bg-surface py-[var(--space-5)] pl-[var(--space-6)] pr-[var(--space-10)]"
+    style="box-shadow:0 16px 40px var(--shadow-toast);animation:cookieUp 400ms ease"
+  >
+    <p class="text-body-s m-0 min-w-[280px] flex-1 text-ink">
+      Мы используем cookies и Яндекс.Метрику, чтобы понимать, как работает сайт. <br/>
+      Пока вы не нажали «Принять», аналитика не подключается. <br/>
+      Подробнее — в{" "}
+      <a href="/privacy" class="text-green hover:text-green-hover">политике конфиденциальности</a>.
+    </p>
+    <button
+      id="cookie-notice-accept"
+      type="button"
+      class="btn-primary btn-primary-compact btn-primary-green relative ml-auto"
+    >
+      Принять
+    </button>
+
+    <button
+      id="cookie-notice-close"
+      type="button"
+      aria-label="Отказаться от аналитики и закрыть"
+      class="absolute flex items-center justify-center rounded-lg p-[var(--space-4)] text-muted transition-colors duration-[var(--motion-card)] hover:text-ink"
+      style="top:var(--space-3);right:var(--space-3)"
+    >
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+        <path d="M3 3L13 13M13 3L3 13" stroke="currentColor" stroke-width="2" stroke-linecap="round"></path>
+      </svg>
+    </button>
+  </div>
+</div>
+
+<style>
+  #cookie-notice-accept::before {
+    content: "";
+    position: absolute;
+    inset: calc((var(--hit-target-min) - var(--control-height-compact)) / -2);
+  }
+</style>
+
+<script is:inline define:vars={{ COOKIE_CONSENT_VERSION, YM_COUNTER_ID }}>
+  (function () {
+    var card = document.getElementById("cookie-notice-card");
+    var acceptButton = document.getElementById("cookie-notice-accept");
+    var closeButton = document.getElementById("cookie-notice-close");
+    if (!card || !acceptButton || !closeButton) return;
+
+    function dismiss() {
+      var reduced = window.matchMedia(
+        "(prefers-reduced-motion: reduce)"
+      ).matches;
+      if (reduced) {
+        delete document.documentElement.dataset.cookieNotice;
+        return;
+      }
+
+      card.style.animation = "cookieDown 350ms ease forwards";
+      setTimeout(function () {
+        delete document.documentElement.dataset.cookieNotice;
+      }, 350);
+    }
+
+    acceptButton.addEventListener("click", function () {
+      try {
+        localStorage.setItem("cookie-consent", "accepted:" + COOKIE_CONSENT_VERSION);
+      } catch (e) {}
+
+      if (typeof window.__mostInitYM === "function") {
+        window.__mostInitYM();
+        if (typeof window.ym === "function") {
+          window.ym(YM_COUNTER_ID, "hit", location.href);
+        }
+      }
+
+      dismiss();
+    });
+
+    closeButton.addEventListener("click", function () {
+      try {
+        localStorage.setItem("cookie-consent", "rejected:" + COOKIE_CONSENT_VERSION);
+      } catch (e) {}
+      dismiss();
+    });
+  })();
+</script>

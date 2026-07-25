@@ -1,0 +1,155 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import { COOKIE_CONSENT_VERSION, CONTACTS, OPERATOR } from "@/consts";
+
+const { title, description, updated } = Astro.props.frontmatter;
+const headings = Astro.props.headings ?? [];
+const toc = headings.filter((h) => h.depth === 2);
+const hasToc = toc.length >= 2;
+---
+
+<BaseLayout title={`${title} — Мост`} description={description}>
+  <section class="border-b-2 border-line bg-bg">
+    <div
+      class="section-shell flex flex-col gap-[var(--space-4)] py-[var(--space-9)] md:py-[var(--space-10)]"
+    >
+      <h1 class="text-h1 max-w-[840px] text-ink text-pretty">{title}</h1>
+      <p class="text-mono-caption text-muted">Обновлено {updated}</p>
+    </div>
+  </section>
+
+  <section class="bg-surface">
+    <div class="legal-grid section-shell py-[var(--space-10)] md:py-[var(--space-12)]">
+      {
+        hasToc && (
+          <details class="legal-toc accordion-native group rounded-2xl border-2 border-line bg-bg">
+            <summary class="text-overline flex cursor-pointer list-none items-center justify-between gap-[var(--space-3)] px-[var(--space-5)] py-[var(--space-4)] text-muted [&::-webkit-details-marker]:hidden">
+              Оглавление
+              <span
+                aria-hidden="true"
+                class="legal-toc-chevron text-[14px] text-accent transition-transform duration-[var(--motion-accordion)] group-open:rotate-180"
+              >
+                ▼
+              </span>
+            </summary>
+            <nav aria-label="Оглавление" class="flex flex-col gap-[2px] px-[var(--space-3)] pb-[var(--space-4)]">
+              {toc.map((h) => (
+                <a
+                  href={`#${h.slug}`}
+                  class="text-body-s rounded-lg px-[var(--space-3)] py-[var(--space-2)] text-ink no-underline transition-colors duration-[var(--motion-card)] hover:bg-hover hover:text-accent"
+                >
+                  {h.text}
+                </a>
+              ))}
+            </nav>
+          </details>
+        )
+      }
+
+      <article
+        class="legal-article article-prose flex flex-col gap-[var(--space-5)]"
+        style="max-width:var(--container-article)"
+      >
+        <slot />
+      </article>
+
+      <aside class="legal-operator flex flex-col gap-[var(--space-4)] rounded-2xl border-2 border-line bg-bg p-[var(--space-5)]">
+        <div class="flex flex-col gap-[var(--space-2)]">
+          <span class="text-overline text-muted">Оператор</span>
+          <p class="text-body-s m-0 text-ink">{OPERATOR.name}</p>
+          <p class="text-caption m-0 text-muted">{OPERATOR.registrationId}</p>
+          <p class="text-caption m-0 text-muted">{OPERATOR.address}</p>
+        </div>
+
+        <a
+          href={CONTACTS.telegram.url}
+          class="text-body-s text-accent no-underline hover:text-accent-hover"
+        >
+          По вопросам ПД · {CONTACTS.telegram.handle}
+        </a>
+
+        <div class="flex flex-col gap-[var(--space-3)] border-t-2 border-line pt-[var(--space-4)]">
+          <p id="cookie-consent-status" class="text-mono-caption m-0 text-muted">
+            Загрузка статуса…
+          </p>
+          <button
+            id="cookie-consent-revoke"
+            type="button"
+            class="text-button-compact inline-flex h-[var(--control-height-compact)] items-center justify-center rounded-xl border-2 border-line bg-surface px-5 text-ink transition-colors duration-[var(--motion-button)] hover:border-accent hover:text-accent"
+          >
+            Отозвать cookies
+          </button>
+        </div>
+      </aside>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .legal-grid {
+    display: grid;
+    gap: var(--space-6);
+  }
+  @media (min-width: 920px) {
+    .legal-grid {
+      grid-template-columns: minmax(220px, 260px) minmax(0, 1fr) minmax(240px, 280px);
+      gap: var(--space-8);
+    }
+    .legal-toc {
+      grid-column: 1;
+      align-self: start;
+      position: sticky;
+      top: calc(var(--header-height) + var(--space-6));
+    }
+    .legal-article {
+      grid-column: 2;
+    }
+    .legal-operator {
+      grid-column: 3;
+      align-self: start;
+      position: sticky;
+      top: calc(var(--header-height) + var(--space-6));
+    }
+    .legal-toc::details-content {
+      block-size: auto;
+      overflow: visible;
+    }
+    .legal-toc summary {
+      cursor: default;
+      pointer-events: none;
+    }
+    .legal-toc-chevron {
+      display: none;
+    }
+  }
+</style>
+
+<script is:inline define:vars={{ COOKIE_CONSENT_VERSION }}>
+  (function () {
+    var statusEl = document.getElementById("cookie-consent-status");
+    var button = document.getElementById("cookie-consent-revoke");
+    if (!statusEl || !button) return;
+
+    var accepted = "accepted:" + COOKIE_CONSENT_VERSION;
+    var rejected = "rejected:" + COOKIE_CONSENT_VERSION;
+    var consent = null;
+    try {
+      consent = localStorage.getItem("cookie-consent");
+    } catch (e) {}
+
+    if (consent === accepted) {
+      statusEl.textContent = "Аналитика подключена";
+    } else if (consent === rejected) {
+      statusEl.textContent = "Аналитика отключена";
+    } else {
+      statusEl.textContent = "Решение не принято";
+    }
+
+    button.addEventListener("click", function () {
+      try {
+        localStorage.removeItem("cookie-consent");
+      } catch (e) {}
+      location.reload();
+    });
+  })();
+</script>

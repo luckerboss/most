@@ -10,3 +10,11 @@ export const CONTACTS = {
 };
 
 export const YM_COUNTER_ID = 110976683;
+
+export const COOKIE_CONSENT_VERSION = '1';
+
+export const OPERATOR = {
+  name: 'TODO: юридическое наименование оператора',
+  registrationId: 'TODO: ИНН/ОГРНИП оператора',
+  address: 'TODO: юридический адрес оператора',
+};

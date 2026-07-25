@@ -1,17 +1,124 @@
 ---
-import BaseLayout from "@/layouts/BaseLayout.astro";
+import "@fontsource-variable/onest";
+import "@fontsource-variable/golos-text";
+import "@fontsource/jetbrains-mono";
+import "@fontsource/jetbrains-mono/500.css";
+import "@/styles/global.css";
+
+import HeadScripts from "@/components/HeadScripts.astro";
+import Logo from "@/components/Logo.astro";
+import YandexMetrika from "@/components/YandexMetrika.astro";
+import CookieNotice from "@/components/blocks/CookieNotice.astro";
+import { CONTACTS } from "@/consts";
 ---
 
-<BaseLayout title="Страница не найдена — Мост">
-  <section class="section-shell py-10">
-    <h1 class="text-3xl text-ink">Страница не найдена</h1>
-    <p class="mt-5 text-muted">
-      Такой страницы нет или она была перемещена.
-    </p>
-    <a
-      href="/"
-      class="mt-5 inline-block text-accent underline-offset-4 hover:text-accent-hover hover:underline"
-      >Вернуться на главную</a
-    >
-  </section>
-</BaseLayout>
+<html lang="ru">
+  <head>
+    <meta charset="utf-8" />
+    <YandexMetrika />
+    <HeadScripts />
+    <meta name="viewport" content="width=device-width" />
+    <meta name="generator" content={Astro.generator} />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" href="/favicon.ico" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/site.webmanifest" />
+    <meta name="theme-color" content="rgb(26, 31, 41)" />
+    <meta name="robots" content="noindex" />
+    <title>Страница не найдена — Мост</title>
+  </head>
+  <body class="flex min-h-[100vh] flex-col">
+    <div class="relative flex min-h-[100vh] flex-col overflow-hidden">
+      <div
+        aria-hidden="true"
+        class="pointer-events-none absolute inset-0 opacity-40"
+        style="background-image:linear-gradient(var(--line) 1px,transparent 1px),linear-gradient(90deg,var(--line) 1px,transparent 1px);background-size:28px 28px;-webkit-mask-image:radial-gradient(ellipse 80% 70% at 50% 45%,black,transparent 72%);mask-image:radial-gradient(ellipse 80% 70% at 50% 45%,black,transparent 72%)"
+      >
+      </div>
+
+      <header class="relative z-10 border-b-2 border-line bg-surface">
+        <div class="section-shell flex h-[var(--header-height)] items-center">
+          <a
+            href="/"
+            aria-label="Мост — на главную"
+            class="flex items-center gap-2 font-heading text-xl font-bold text-ink no-underline"
+          >
+            <Logo size={28} />
+            Мост
+          </a>
+        </div>
+      </header>
+
+      <main class="relative z-10 flex flex-1 items-center justify-center">
+        <div
+          data-anim
+          class="section-shell flex w-full flex-col items-start gap-[var(--space-6)] py-[var(--space-9)] md:py-[var(--space-12)]"
+          style="max-width:720px"
+        >
+          <span
+            class="text-overline rounded-full border-2 border-line px-[var(--space-3)] py-[var(--space-1)] text-muted"
+          >
+            Ошибка 404 · технические работы
+          </span>
+
+          <svg
+            aria-hidden="true"
+            viewBox="0 0 320 110"
+            class="h-auto text-ink"
+            style="width:min(320px,100%)"
+            fill="none"
+          >
+            <line x1="4" y1="86" x2="112" y2="86" stroke="currentColor" stroke-width="3"></line>
+            <line x1="208" y1="86" x2="316" y2="86" stroke="currentColor" stroke-width="3"></line>
+            <line x1="112" y1="86" x2="150" y2="34" stroke="var(--accent)" stroke-width="3"></line>
+            <line x1="208" y1="86" x2="170" y2="34" stroke="var(--accent)" stroke-width="3"></line>
+            <line x1="40" y1="86" x2="40" y2="106" stroke="currentColor" stroke-width="3"></line>
+            <line x1="280" y1="86" x2="280" y2="106" stroke="currentColor" stroke-width="3"></line>
+            <line x1="112" y1="86" x2="112" y2="106" stroke="var(--line2)" stroke-width="2"></line>
+            <line x1="208" y1="86" x2="208" y2="106" stroke="var(--line2)" stroke-width="2"></line>
+            <circle cx="112" cy="86" r="4" fill="var(--accent)"></circle>
+            <circle cx="208" cy="86" r="4" fill="var(--accent)"></circle>
+            <line
+              x1="152"
+              y1="26"
+              x2="168"
+              y2="26"
+              stroke="var(--line2)"
+              stroke-width="1.5"
+              stroke-dasharray="4 4"></line>
+          </svg>
+
+          <h1 class="text-h1 text-ink">Мост разведён — идут технические работы</h1>
+          <p class="text-lead max-w-[560px] text-pretty text-muted">
+            Страница временно недоступна: обновляем сайт. Обычно это занимает не больше пары
+            часов — попробуйте зайти позже или напишите нам напрямую, мы на связи.
+          </p>
+
+          <div class="mt-[var(--space-1)] flex flex-wrap gap-[var(--space-4)]">
+            <a href="/" class="btn-primary btn-primary-accent">На главную</a>
+            <a
+              href={CONTACTS.telegram.url}
+              class="text-button inline-flex h-[var(--control-height)] items-center justify-center rounded-xl border-2 border-line bg-surface px-6 text-ink no-underline transition-colors duration-[var(--motion-button)] hover:border-green hover:text-green"
+            >
+              Написать в Telegram
+            </a>
+          </div>
+
+          <div
+            class="flex w-full flex-wrap gap-x-[var(--space-7)] gap-y-[var(--space-3)] border-t-2 border-line pt-[var(--space-6)]"
+          >
+            <a
+              href={CONTACTS.phone.href}
+              class="text-body text-ink no-underline hover:text-accent"
+            >
+              {CONTACTS.phone.display}
+            </a>
+            <span class="text-mono-caption text-muted">Киров · работаем по всей РФ</span>
+          </div>
+        </div>
+      </main>
+    </div>
+
+    <CookieNotice />
+  </body>
+</html>

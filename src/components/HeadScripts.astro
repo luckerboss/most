@@ -1,0 +1,37 @@
+---
+import { COOKIE_CONSENT_VERSION } from "@/consts";
+---
+
+<script is:inline>
+  (function () {
+    var theme = null;
+    try {
+      theme = localStorage.getItem("theme");
+    } catch (e) {}
+    if (theme !== "light" && theme !== "dark") {
+      theme = window.matchMedia("(prefers-color-scheme: dark)").matches
+        ? "dark"
+        : "light";
+    }
+    document.documentElement.setAttribute("data-theme", theme);
+  })();
+</script>
+<script is:inline define:vars={{ COOKIE_CONSENT_VERSION }}>
+  (function () {
+    var consent = null;
+    try {
+      consent = localStorage.getItem("cookie-consent");
+    } catch (e) {}
+
+    var accepted = "accepted:" + COOKIE_CONSENT_VERSION;
+    var rejected = "rejected:" + COOKIE_CONSENT_VERSION;
+
+    if (consent !== accepted && consent !== rejected) {
+      document.documentElement.dataset.cookieNotice = "pending";
+    }
+
+    if (consent === accepted && typeof window.__mostInitYM === "function") {
+      window.__mostInitYM();
+    }
+  })();
+</script>

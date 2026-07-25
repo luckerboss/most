@@ -28,6 +28,7 @@
 
   --belyi: rgb(255, 255, 255);
   --shadow-card: rgb(28 33 43 / 0.08);
+  --shadow-toast: rgb(28 33 43 / 0.18);
 
   --selection-bg: var(--green-tint);
   --selection-ink: var(--ink);
@@ -56,6 +57,7 @@
   --red-border: rgb(118, 57, 52);
   --dark-section: rgb(23, 28, 37);
   --header-bg: rgb(17 21 28 / 0.9);
+  --shadow-toast: rgb(0 0 0 / 0.45);
   color-scheme: dark;
 }
 

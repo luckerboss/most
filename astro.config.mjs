@@ -10,7 +10,13 @@ export default defineConfig({
   site: 'https://audit-most.ru',
   output: 'static',
   adapter: node({ mode: 'standalone' }),
-  integrations: [react(), mdx(), sitemap()],
+  integrations: [
+    react(),
+    mdx(),
+    sitemap({
+      filter: (page) => !page.endsWith('/404') && !page.endsWith('/404/'),
+    }),
+  ],
 
   vite: {
     plugins: [tailwindcss()]
