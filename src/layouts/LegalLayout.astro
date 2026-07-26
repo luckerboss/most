@@ -1,5 +1,6 @@
 ---
 import BaseLayout from "@/layouts/BaseLayout.astro";
+import LegalTocLinks from "@/components/blocks/LegalTocLinks.astro";
 import { COOKIE_CONSENT_VERSION, CONTACTS, OPERATOR } from "@/consts";
 
 const { title, description, updated } = Astro.props.frontmatter;
@@ -22,27 +23,29 @@ const hasToc = toc.length >= 2;
     <div class="legal-grid section-shell py-[var(--space-10)] md:py-[var(--space-12)]">
       {
         hasToc && (
-          <details class="legal-toc accordion-native group rounded-2xl border-2 border-line bg-bg">
+          <details class="legal-toc-mobile accordion-native group burger:hidden rounded-2xl border-2 border-line bg-bg">
             <summary class="text-overline flex cursor-pointer list-none items-center justify-between gap-[var(--space-3)] px-[var(--space-5)] py-[var(--space-4)] text-muted [&::-webkit-details-marker]:hidden">
               Оглавление
               <span
                 aria-hidden="true"
-                class="legal-toc-chevron text-[14px] text-accent transition-transform duration-[var(--motion-accordion)] group-open:rotate-180"
+                class="text-[14px] text-accent transition-transform duration-[var(--motion-accordion)] group-open:rotate-180"
               >
                 ▼
               </span>
             </summary>
-            <nav aria-label="Оглавление" class="flex flex-col gap-[2px] px-[var(--space-3)] pb-[var(--space-4)]">
-              {toc.map((h) => (
-                <a
-                  href={`#${h.slug}`}
-                  class="text-body-s rounded-lg px-[var(--space-3)] py-[var(--space-2)] text-ink no-underline transition-colors duration-[var(--motion-card)] hover:bg-hover hover:text-accent"
-                >
-                  {h.text}
-                </a>
-              ))}
-            </nav>
+            <LegalTocLinks toc={toc} />
           </details>
+        )
+      }
+
+      {
+        hasToc && (
+          <div class="legal-toc hidden burger:block rounded-2xl border-2 border-line bg-bg">
+            <span class="text-overline block px-[var(--space-5)] pt-[var(--space-4)] pb-[var(--space-2)] text-muted">
+              Оглавление
+            </span>
+            <LegalTocLinks toc={toc} />
+          </div>
         )
       }
 
@@ -109,17 +112,6 @@ const hasToc = toc.length >= 2;
       align-self: start;
       position: sticky;
       top: calc(var(--header-height) + var(--space-6));
-    }
-    .legal-toc::details-content {
-      block-size: auto;
-      overflow: visible;
-    }
-    .legal-toc summary {
-      cursor: default;
-      pointer-events: none;
-    }
-    .legal-toc-chevron {
-      display: none;
     }
   }
 </style>

@@ -1,0 +1,14 @@
+---
+const { toc } = Astro.props;
+---
+
+<nav aria-label="Оглавление" class="flex flex-col gap-[2px] px-[var(--space-3)] pb-[var(--space-4)]">
+  {toc.map((h) => (
+    <a
+      href={`#${h.slug}`}
+      class="text-body-s rounded-lg px-[var(--space-3)] py-[var(--space-2)] text-ink no-underline transition-colors duration-[var(--motion-card)] hover:bg-hover hover:text-accent"
+    >
+      {h.text}
+    </a>
+  ))}
+</nav>

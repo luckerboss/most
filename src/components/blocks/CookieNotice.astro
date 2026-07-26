@@ -15,8 +15,7 @@ import { COOKIE_CONSENT_VERSION, YM_COUNTER_ID } from "@/consts";
     style="box-shadow:0 16px 40px var(--shadow-toast);animation:cookieUp 400ms ease"
   >
     <p class="text-body-s m-0 min-w-[280px] flex-1 text-ink">
-      Мы используем cookies и Яндекс.Метрику, чтобы понимать, как работает сайт. <br/>
-      Пока вы не нажали «Принять», аналитика не подключается. <br/>
+      Мы используем cookies и метрики для улучшения работы сайта. <br/>
       Подробнее — в{" "}
       <a href="/privacy" class="text-green hover:text-green-hover">политике конфиденциальности</a>.
     </p>
@@ -52,13 +51,13 @@ import { COOKIE_CONSENT_VERSION, YM_COUNTER_ID } from "@/consts";
 
 <script is:inline define:vars={{ COOKIE_CONSENT_VERSION, YM_COUNTER_ID }}>
   (function () {
-    var card = document.getElementById("cookie-notice-card");
-    var acceptButton = document.getElementById("cookie-notice-accept");
-    var closeButton = document.getElementById("cookie-notice-close");
+    let card = document.getElementById("cookie-notice-card");
+    let acceptButton = document.getElementById("cookie-notice-accept");
+    let closeButton = document.getElementById("cookie-notice-close");
     if (!card || !acceptButton || !closeButton) return;
 
     function dismiss() {
-      var reduced = window.matchMedia(
+      let reduced = window.matchMedia(
         "(prefers-reduced-motion: reduce)"
       ).matches;
       if (reduced) {

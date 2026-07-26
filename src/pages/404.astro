@@ -49,7 +49,9 @@ import { CONTACTS } from "@/consts";
         </div>
       </header>
 
-      <main class="relative z-10 flex flex-1 items-center justify-center">
+      <main
+        class="relative z-10 flex flex-1 items-center justify-center pb-[var(--space-12)] md:pb-[var(--space-11)]"
+      >
         <div
           data-anim
           class="section-shell flex w-full flex-col items-start gap-[var(--space-6)] py-[var(--space-9)] md:py-[var(--space-12)]"
@@ -88,9 +90,9 @@ import { CONTACTS } from "@/consts";
               stroke-dasharray="4 4"></line>
           </svg>
 
-          <h1 class="text-h1 text-ink">Мост разведён — идут технические работы</h1>
+          <h1 class="text-h1 text-ink">Мост разведён, идут технические работы</h1>
           <p class="text-lead max-w-[560px] text-pretty text-muted">
-            Страница временно недоступна: обновляем сайт. Обычно это занимает не больше пары
+            Страница временно недоступна: мы обновляем сайт. Обычно это занимает не больше пары
             часов — попробуйте зайти позже или напишите нам напрямую, мы на связи.
           </p>
 
@@ -102,18 +104,6 @@ import { CONTACTS } from "@/consts";
             >
               Написать в Telegram
             </a>
-          </div>
-
-          <div
-            class="flex w-full flex-wrap gap-x-[var(--space-7)] gap-y-[var(--space-3)] border-t-2 border-line pt-[var(--space-6)]"
-          >
-            <a
-              href={CONTACTS.phone.href}
-              class="text-body text-ink no-underline hover:text-accent"
-            >
-              {CONTACTS.phone.display}
-            </a>
-            <span class="text-mono-caption text-muted">Киров · работаем по всей РФ</span>
           </div>
         </div>
       </main>
